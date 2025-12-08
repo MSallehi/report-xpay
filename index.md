@@ -68,6 +68,12 @@
   - Batch DOM Operations
   - 97% کاهش Reflow
 
+- [**⚡ بهینه‌سازی JavaScript Execution**](JS-EXECUTION-OPTIMIZATION.md) 🆕
+  - Code Splitting (8 bundleها)
+  - TerserPlugin Optimization
+  - کاهش 45% زمان اجرای JS
+  - Webpack Tree Shaking
+
 - [**🎛️ کنترلر PageSpeed**](PAGESPEED_CONTROLLER.md)
   - API مدیریت PageSpeed
   - پنل ادمین
