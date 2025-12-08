@@ -52,6 +52,32 @@ body {
   direction: rtl;
 }
 
+/* LTR Content (for code blocks, diagrams, etc.) */
+.ltr-content,
+.ltr-content pre,
+.ltr-content code {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+/* All code blocks should be LTR */
+pre,
+code,
+.highlight,
+.highlighter-rouge {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Inline code in RTL paragraphs */
+p code,
+li code,
+td code {
+  direction: ltr;
+  display: inline-block;
+  unicode-bidi: embed;
+}
+
 /* Header */
 .page-header {
   text-align: center;

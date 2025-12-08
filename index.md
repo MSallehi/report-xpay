@@ -166,6 +166,8 @@
 
 ## 🗂️ ساختار پروژه
 
+<div class="ltr-content" markdown="1">
+
 ```
 xpay_main_theme/
 ├── 📁 app/
@@ -196,6 +198,8 @@ xpay_main_theme/
 │
 └── 📄 functions.php       # تنظیمات اصلی WordPress
 ```
+
+</div>
 
 ---
 
