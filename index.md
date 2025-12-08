@@ -84,6 +84,14 @@
   - پیکربندی CDN
   - Optimization Tips
 
+- [**🔒 بهینه‌سازی HTTP Headers**](HTTP-HEADERS-OPTIMIZATION.md) 🆕
+  - تنظیمات Response Headers
+  - HTTP/2 و HTTP/3
+  - Brotli Compression
+  - Cache-Control Strategy
+  - Security Headers (HSTS, CSP, Permissions-Policy)
+  - تنظیمات آروان CDN
+
 - [**🗺️ تنظیمات Rank Math SEO**](rank-math-configuration.md)
   - Schema و JSON-LD
   - Breadcrumb
