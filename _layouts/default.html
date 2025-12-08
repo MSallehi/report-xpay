@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'fa' }}" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- SEO Meta Tags -->
+    <title>{{ page.title | default: site.title }}</title>
+    <meta
+      name="description"
+      content="{{ page.description | default: site.description }}"
+    />
+    <meta name="author" content="XPay Team" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="{{ page.title | default: site.title }}"
+    />
+    <meta
+      property="og:description"
+      content="{{ page.description | default: site.description }}"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="{{ site.url }}{{ site.baseurl }}{{ page.url }}"
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ site.baseurl }}/favicon.ico"
+    />
+
+    <!-- Fonts - IRANSansX from XPay CDN -->
+    <link rel="preconnect" href="https://cdn.xpay.co" />
+    <link rel="dns-prefetch" href="https://cdn.xpay.co" />
+
+    <!-- Styles -->
+    <link
+      rel="stylesheet"
+      href="{{ '/assets/css/style.css' | relative_url }}"
+    />
+
+    {% if site.google_analytics %}
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "{{ site.google_analytics }}");
+    </script>
+    {% endif %}
+  </head>
+
+  <body>
+    <!-- Page Header -->
+    <header class="page-header" role="banner">
+      <h1 class="project-name">{{ site.title }}</h1>
+      <h2 class="project-tagline">{{ site.description }}</h2>
+
+      {% if site.github.is_project_page %}
+      <a href="{{ site.github.repository_url }}" class="btn"
+        >مشاهده در GitHub</a
+      >
+      {% endif %} {% if page.show_downloads == true or site.show_downloads %}
+      <a href="{{ site.github.zip_url }}" class="btn">دانلود .zip</a>
+      <a href="{{ site.github.tar_url }}" class="btn">دانلود .tar.gz</a>
+      {% endif %}
+
+      <!-- Navigation -->
+      <nav class="site-nav">
+        <a href="{{ site.baseurl }}/">🏠 خانه</a>
+        <a href="{{ site.baseurl }}/PERFORMANCE-REPORT">📊 گزارش عملکرد</a>
+        <a href="{{ site.baseurl }}/PAGESPEED-OPTIMIZATIONS">🚀 بهینه‌سازی</a>
+        <a href="{{ site.baseurl }}/DEVELOPER-GUIDE">👨‍💻 راهنمای توسعه</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="content" class="main-content" role="main">
+      {{ content }}
+
+      <!-- Footer Navigation -->
+      {% if page.previous or page.next %}
+      <nav class="page-navigation">
+        {% if page.previous %}
+        <a href="{{ page.previous.url | relative_url }}" class="prev-page">
+          ← {{ page.previous.title }}
+        </a>
+        {% endif %} {% if page.next %}
+        <a href="{{ page.next.url | relative_url }}" class="next-page">
+          {{ page.next.title }} →
+        </a>
+        {% endif %}
+      </nav>
+      {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-content">
+        <p>
+          <strong>{{ site.title }}</strong> - نسخه 5.5.8
+          <br />
+          آخرین بروزرسانی: {{ site.time | date: "%d %B %Y" }}
+        </p>
+
+        {% if site.github.is_project_page %}
+        <p>
+          نگهداری شده توسط
+          <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>
+          <br />
+          <a href="{{ site.github.repository_url }}">مشاهده در GitHub</a>
+        </p>
+        {% endif %}
+
+        <p class="footer-links">
+          <a href="https://xpay.co">وب‌سایت XPay</a> |
+          <a href="{{ site.github.issues_url }}">گزارش مشکل</a> |
+          <a href="{{ site.baseurl }}/changelog/CHANGELOG-FA">تغییرات</a>
+        </p>
+
+        <p class="copyright">© 2025 XPay. تمامی حقوق محفوظ است.</p>
+      </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="بازگشت به بالا">
+      ↑
+    </button>
+
+    <!-- Scripts -->
+    <script>
+      // Back to Top Button
+      const backToTop = document.getElementById("backToTop");
+
+      window.addEventListener("scroll", function () {
+        if (window.pageYOffset > 300) {
+          backToTop.classList.add("show");
+        } else {
+          backToTop.classList.remove("show");
+        }
+      });
+
+      backToTop.addEventListener("click", function () {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      });
+
+      // Smooth Scroll for Anchor Links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // External Links in New Tab
+      document.querySelectorAll('a[href^="http"]').forEach((link) => {
+        if (!link.href.includes(window.location.hostname)) {
+          link.setAttribute("target", "_blank");
+          link.setAttribute("rel", "noopener noreferrer");
+        }
+      });
+
+      // Copy Code Button
+      document.querySelectorAll("pre").forEach((pre) => {
+        const code = pre.querySelector("code");
+        if (code) {
+          const button = document.createElement("button");
+          button.className = "copy-code-btn";
+          button.textContent = "کپی";
+          button.addEventListener("click", () => {
+            navigator.clipboard.writeText(code.textContent);
+            button.textContent = "✓ کپی شد";
+            setTimeout(() => {
+              button.textContent = "کپی";
+            }, 2000);
+          });
+          pre.style.position = "relative";
+          pre.appendChild(button);
+        }
+      });
+    </script>
+  </body>
+</html>

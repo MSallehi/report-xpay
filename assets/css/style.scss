@@ -489,7 +489,7 @@ html {
 .copy-code-btn {
   position: absolute;
   top: 0.5rem;
-  left: 0.5rem;
+  right: 0.5rem;
   background: #667eea;
   color: white;
   border: none;
@@ -497,8 +497,14 @@ html {
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.85rem;
+  font-family: "IRANSansX", sans-serif;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+pre {
+  position: relative;
 }
 
 pre:hover .copy-code-btn {
@@ -507,10 +513,7 @@ pre:hover .copy-code-btn {
 
 .copy-code-btn:hover {
   background: #764ba2;
-}
-
-pre {
-  position: relative;
+  transform: scale(1.05);
 }
 
 /* Footer Styling */
