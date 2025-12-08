@@ -62,6 +62,12 @@
   - React Rendering
   - CSS Containment
 
+- [**🎯 بهینه‌سازی Forced Reflow v2**](FORCED-REFLOW-OPTIMIZATION.md) 🆕
+  - راه‌حل DOMQueue
+  - Cached Scroll Position
+  - Batch DOM Operations
+  - 97% کاهش Reflow
+
 - [**🎛️ کنترلر PageSpeed**](PAGESPEED_CONTROLLER.md)
   - API مدیریت PageSpeed
   - پنل ادمین
