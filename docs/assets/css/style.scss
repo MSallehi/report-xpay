@@ -1,0 +1,511 @@
+---
+---
+
+/* ==========================================================================
+   Custom Styles for XPay Documentation - RTL Support
+   ========================================================================== */
+
+/* RTL Configuration */
+* {
+  direction: rtl;
+  text-align: right;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, 'Vazir', 'Iranian Sans', Arial, sans-serif;
+  line-height: 1.8;
+  direction: rtl;
+}
+
+/* Header */
+.page-header {
+  text-align: center;
+  direction: rtl;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.page-header h1,
+.page-header p {
+  direction: rtl;
+  text-align: center;
+}
+
+/* Main Content */
+.main-content {
+  direction: rtl;
+  text-align: right;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+  direction: rtl;
+  text-align: right;
+  color: #333;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.main-content h1 {
+  font-size: 2.5rem;
+  border-bottom: 3px solid #667eea;
+  padding-bottom: 0.5rem;
+}
+
+.main-content h2 {
+  font-size: 2rem;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 0.3rem;
+}
+
+.main-content h3 {
+  font-size: 1.5rem;
+  color: #667eea;
+}
+
+/* Paragraphs */
+.main-content p {
+  direction: rtl;
+  text-align: right;
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+/* Lists */
+.main-content ul,
+.main-content ol {
+  direction: rtl;
+  text-align: right;
+  padding-right: 2rem;
+  padding-left: 0;
+  margin-bottom: 1.5rem;
+}
+
+.main-content li {
+  direction: rtl;
+  text-align: right;
+  margin-bottom: 0.5rem;
+}
+
+/* Tables */
+.main-content table {
+  direction: rtl;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.main-content table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.main-content table th {
+  padding: 1rem;
+  text-align: right;
+  font-weight: 600;
+}
+
+.main-content table td {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  border-bottom: 1px solid #eee;
+}
+
+.main-content table tbody tr:hover {
+  background-color: #f8f9ff;
+}
+
+/* Code Blocks */
+.main-content pre {
+  direction: ltr;
+  text-align: left;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.main-content code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.main-content pre code {
+  direction: ltr;
+  text-align: left;
+  color: #f8f8f2;
+}
+
+.main-content p code,
+.main-content li code {
+  background-color: #f4f4f4;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  color: #c7254e;
+  font-size: 0.9em;
+}
+
+/* Blockquotes */
+.main-content blockquote {
+  direction: rtl;
+  text-align: right;
+  border-right: 4px solid #667eea;
+  border-left: none;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  background-color: #f8f9ff;
+  border-radius: 4px;
+}
+
+.main-content blockquote p {
+  margin-bottom: 0.5rem;
+}
+
+/* Links */
+.main-content a {
+  color: #667eea;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.main-content a:hover {
+  color: #764ba2;
+  border-bottom: 1px solid #764ba2;
+}
+
+/* Badges and Labels */
+.main-content p > strong {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Status Badges */
+.main-content em {
+  font-style: normal;
+}
+
+.main-content em:contains("✅") {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.main-content em:contains("❌") {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.main-content em:contains("⚠️") {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+/* Horizontal Rule */
+.main-content hr {
+  border: none;
+  border-top: 2px solid #ddd;
+  margin: 3rem 0;
+}
+
+/* Navigation Footer */
+.site-footer {
+  direction: rtl;
+  text-align: center;
+  padding: 2rem;
+  background-color: #2d2d2d;
+  color: white;
+  margin-top: 3rem;
+}
+
+.site-footer a {
+  color: #667eea;
+}
+
+/* Responsive Tables */
+@media screen and (max-width: 768px) {
+  .main-content table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .page-header,
+  .site-footer {
+    display: none;
+  }
+  
+  .main-content {
+    max-width: 100%;
+    padding: 0;
+  }
+}
+
+/* Custom Containers */
+.main-content .highlight {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Definition Lists */
+.main-content dl {
+  direction: rtl;
+  text-align: right;
+}
+
+.main-content dt {
+  font-weight: 700;
+  color: #667eea;
+  margin-top: 1rem;
+}
+
+.main-content dd {
+  margin-right: 2rem;
+  margin-left: 0;
+  margin-bottom: 1rem;
+}
+
+/* Task Lists */
+.main-content .task-list-item {
+  list-style: none;
+  margin-right: -2rem;
+}
+
+.main-content .task-list-item input[type="checkbox"] {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+/* Emoji Support */
+img.emoji {
+  display: inline;
+  height: 1em;
+  width: 1em;
+  margin: 0 0.05em 0 0.1em;
+  vertical-align: -0.1em;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection Color */
+::selection {
+  background-color: #667eea;
+  color: white;
+}
+
+::-moz-selection {
+  background-color: #667eea;
+  color: white;
+}
+
+/* Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1.5rem;
+  z-index: 1000;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Site Navigation */
+.site-nav {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.site-nav a:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* GitHub Button */
+.btn {
+  display: inline-block;
+  margin: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Page Navigation */
+.page-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #ddd;
+}
+
+.page-navigation a {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.page-navigation a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Copy Code Button */
+.copy-code-btn {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+pre:hover .copy-code-btn {
+  opacity: 1;
+}
+
+.copy-code-btn:hover {
+  background: #764ba2;
+}
+
+pre {
+  position: relative;
+}
+
+/* Footer Styling */
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-links a {
+  color: #667eea;
+  margin: 0 0.5rem;
+}
+
+.footer-links a:hover {
+  color: #764ba2;
+}
+
+.copyright {
+  margin-top: 1rem;
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+/* Accessibility Improvements */
+.main-content a:focus,
+.main-content button:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+  
+  .main-content h1,
+  .main-content h2,
+  .main-content h3,
+  .main-content h4,
+  .main-content h5,
+  .main-content h6 {
+    color: #f0f0f0;
+  }
+  
+  .main-content table td {
+    border-bottom: 1px solid #333;
+  }
+  
+  .main-content table tbody tr:hover {
+    background-color: #2a2a2a;
+  }
+  
+  .main-content blockquote {
+    background-color: #2a2a2a;
+  }
+  
+  .main-content p code,
+  .main-content li code {
+    background-color: #2a2a2a;
+    color: #ff6b6b;
+  }
+}

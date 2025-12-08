@@ -1,14 +1,15 @@
 # GitHub Pages Configuration for XPay Theme Documentation
 
 # Theme Settings
-theme: jekyll-theme-cayman
+theme: jekyll-theme-slate
 title: "مستندات فنی قالب XPay"
 description: "مستندات کامل توسعه، بهینه‌سازی، و استقرار قالب وردپرس XPay"
 
 # Site Settings
 lang: fa
-baseurl: "/xpay-wp"
-url: "https://xpay-wp.github.io"
+baseurl: "/report-xpay"
+url: "https://msallehi.github.io"
+repository: "MSallehi/report-xpay"
 
 # Navigation
 show_downloads: false
@@ -54,9 +55,14 @@ collections:
 defaults:
   - scope:
       path: ""
-      type: "docs"
     values:
       layout: "default"
+      
+# Google Analytics (optional)
+# google_analytics: UA-XXXXXXXXX-X
+
+# Custom CSS
+custom_css: true
       
 # Exclude from processing
 exclude:
