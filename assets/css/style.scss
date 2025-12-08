@@ -47,7 +47,7 @@
 }
 
 body {
-  font-family: 'IRANSansX', 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-family: "IRANSansX", "Segoe UI", Tahoma, Arial, sans-serif;
   line-height: 1.8;
   direction: rtl;
 }
@@ -66,6 +66,11 @@ code,
 .highlight,
 .highlighter-rouge {
   direction: ltr;
+  text-align: left;
+}
+
+pre code {
+  direction: rtl;
   text-align: left;
 }
 
@@ -162,7 +167,7 @@ td code {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -197,11 +202,11 @@ td code {
   padding: 1.5rem;
   overflow-x: auto;
   margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .main-content code {
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
   font-size: 0.9em;
 }
 
@@ -314,7 +319,7 @@ td code {
   .site-footer {
     display: none;
   }
-  
+
   .main-content {
     max-width: 100%;
     padding: 0;
@@ -395,7 +400,7 @@ html {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
@@ -411,7 +416,7 @@ html {
 
 .back-to-top:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Site Navigation */
@@ -542,7 +547,7 @@ pre {
     background-color: #1a1a1a;
     color: #e0e0e0;
   }
-  
+
   .main-content h1,
   .main-content h2,
   .main-content h3,
@@ -551,19 +556,19 @@ pre {
   .main-content h6 {
     color: #f0f0f0;
   }
-  
+
   .main-content table td {
     border-bottom: 1px solid #333;
   }
-  
+
   .main-content table tbody tr:hover {
     background-color: #2a2a2a;
   }
-  
+
   .main-content blockquote {
     background-color: #2a2a2a;
   }
-  
+
   .main-content p code,
   .main-content li code {
     background-color: #2a2a2a;
