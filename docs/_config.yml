@@ -1,0 +1,81 @@
+# GitHub Pages Configuration for XPay Theme Documentation
+
+# Theme Settings
+theme: jekyll-theme-cayman
+title: "مستندات فنی قالب XPay"
+description: "مستندات کامل توسعه، بهینه‌سازی، و استقرار قالب وردپرس XPay"
+
+# Site Settings
+lang: fa
+baseurl: "/xpay-wp"
+url: "https://xpay-wp.github.io"
+
+# Navigation
+show_downloads: false
+
+# Markdown Settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    
+# Plugins
+plugins:
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
+  - jekyll-readme-index
+  - jekyll-titles-from-headings
+  - jekyll-github-metadata
+
+# Relative Links
+relative_links:
+  enabled: true
+  collections: true
+
+# Optional Front Matter
+optional_front_matter:
+  remove_originals: true
+
+# Titles from Headings
+titles_from_headings:
+  enabled: true
+  strip_title: true
+  collections: true
+
+# Collections
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:path/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "docs"
+    values:
+      layout: "default"
+      
+# Exclude from processing
+exclude:
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - README.md
+  - LICENSE
+  - "*.log"
+
+# Include
+include:
+  - _config.yml
+  - index.md
+  - PERFORMANCE-REPORT.md
+  - PAGESPEED-OPTIMIZATIONS.md
+  - DEVELOPER-GUIDE.md
+  - mvc-architecture.md
+  - DEPLOYMENT.md
+  - CSP_SECURITY.md
+  - FORCED_REFLOW_OPTIMIZATION.md
