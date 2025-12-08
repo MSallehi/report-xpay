@@ -35,6 +35,7 @@
 - [معماری MVC](https://msallehi.github.io/report-xpay/mvc-architecture)
 - [تنظیمات CSP](https://msallehi.github.io/report-xpay/CSP_SECURITY)
 - [بهینه‌سازی Reflow](https://msallehi.github.io/report-xpay/FORCED_REFLOW_OPTIMIZATION)
+- [بهینه‌سازی Cache در CDN](https://msallehi.github.io/report-xpay/CDN-CACHE-OPTIMIZATION) 🆕
 - [راهنمای Deploy](https://msallehi.github.io/report-xpay/DEPLOYMENT)
 
 ---

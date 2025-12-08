@@ -90,6 +90,12 @@
   - پیکربندی CDN
   - Optimization Tips
 
+- [**⚡ بهینه‌سازی Cache در CDN**](CDN-CACHE-OPTIMIZATION.md) 🆕
+  - تنظیم Cache Lifetime (1 سال)
+  - رفع "Use efficient cache lifetimes"
+  - فایل .htaccess برای CDN
+  - تست و عیب‌یابی
+
 - [**🔒 بهینه‌سازی HTTP Headers**](HTTP-HEADERS-OPTIMIZATION.md) 🆕
   - تنظیمات Response Headers
   - HTTP/2 و HTTP/3
