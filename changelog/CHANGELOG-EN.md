@@ -101,6 +101,34 @@ All notable changes to this project will be documented in this file.
   - ✅ Better browser cache (changing one library doesn't invalidate others)
   - ✅ Reduced main-thread blocking
 - **Documentation:** See `docs/JS-EXECUTION-OPTIMIZATION.md`
+
+#### 📦 Unused JavaScript Optimization (Tree Shaking)
+- **Problem:** PageSpeed warning "Reduce unused JavaScript: 271 KiB"
+  - `app-highcharts.js`: 157 KB unused (69% unused)
+  - `app-datetime.js`: 57.5 KB unused (heavy moment-jalaali)
+  - `swiper.js`: 22.6 KB unused
+- **Solution:**
+  - **Dynamic Import Highcharts**:
+    - Lazy load with `import()` instead of static import
+    - Only loads when chart is needed
+    - Separate chunks: core, react, boost
+  - **Replace moment-jalaali with dayjs + jalaliday**:
+    - moment-jalaali: ~300 KB
+    - dayjs + jalaliday: ~15 KB (✅ 95% reduction)
+  - **Webpack Tree Shaking**:
+    - `sideEffects: false` in package.json
+    - `usedExports: true` in webpack.config
+    - Terser passes: 2 for better compression
+- **Modified Files:**
+  - `src/components/CoinChart.jsx` - dynamic import Highcharts, use dayjs
+  - `webpack.config.js` - enabled tree shaking
+  - `package.json` - sideEffects: false, added jalaliday
+- **Results:**
+  - ✅ ~60% reduction in unused Highcharts code
+  - ✅ Removed app-datetime.js (285 KB reduction)
+  - ✅ dayjs: 15 KB vs moment: 300 KB
+  - ✅ Lazy loading: chart loads only when needed
+- **Documentation:** See `docs/JS-EXECUTION-OPTIMIZATION.md`
   - Frame-based invalidation
 
 - `window.isElementVisibleSafe(element)` - visibility without reflow

@@ -135,6 +135,34 @@ app-vendor.js         ~5 ms ✅
   - ✅ کاهش main-thread blocking
 - **مستندات:** مراجعه کنید به `docs/JS-EXECUTION-OPTIMIZATION.md`
 
+#### 📦 بهینه‌سازی Unused JavaScript (Tree Shaking)
+- **مشکل:** PageSpeed هشدار "Reduce unused JavaScript: 271 KiB"
+  - `app-highcharts.js`: 157 KB unused (69% استفاده نشده)
+  - `app-datetime.js`: 57.5 KB unused (moment-jalaali سنگین)
+  - `swiper.js`: 22.6 KB unused
+- **راه‌حل:**
+  - **Dynamic Import Highcharts**:
+    - Lazy load با `import()` به جای static import
+    - فقط زمانی بارگذاری می‌شود که نمودار نمایش داده شود
+    - Chunk‌های جداگانه: core, react, boost
+  - **جایگزینی moment-jalaali با dayjs + jalaliday**:
+    - moment-jalaali: ~300 KB
+    - dayjs + jalaliday: ~15 KB (✅ 95% کاهش)
+  - **Webpack Tree Shaking**:
+    - `sideEffects: false` در package.json
+    - `usedExports: true` در webpack.config
+    - Terser passes: 2 برای compression بهتر
+- **فایل‌های تغییریافته:**
+  - `src/components/CoinChart.jsx` - dynamic import Highcharts, dayjs
+  - `webpack.config.js` - tree shaking فعال
+  - `package.json` - sideEffects: false, jalaliday اضافه شد
+- **نتیجه:**
+  - ✅ کاهش ~60% unused code در Highcharts
+  - ✅ حذف app-datetime.js (285 KB کاهش)
+  - ✅ dayjs: 15 KB vs moment: 300 KB
+  - ✅ Lazy loading: chart فقط وقتی لازم است load می‌شود
+- **مستندات:** مراجعه کنید به `docs/JS-EXECUTION-OPTIMIZATION.md`
+
 **بهبود:** 97% کاهش (363ms صرفه‌جویی)
 
 #### 📚 مستندات
