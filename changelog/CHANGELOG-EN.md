@@ -169,6 +169,64 @@ app-vendor.js         ~5 ms ✅
 Total:               < 10 ms 🎉
 ```
 
+#### 🗺️ Fixed Source Maps for Webpack Bundles
+- **Problem:** PageSpeed warning "Missing source maps for large JavaScript"
+  - `.map` files were excluded from deployment
+  - SyntaxError: Unexpected token '<' in source maps
+  - 404 errors for all `.v5.5.x.js.map` files
+- **Solution:**
+  - Updated `create-versioned-sourcemaps.js` to include all bundles:
+    - runtime, app-react, app-highcharts, app-datetime, app-vendor
+    - app-calculator, app-chart, app-coins
+  - Updated `.github/workflows/deploy.yml`:
+    - Removed `assets/js/*.map` from exclude list
+    - Only base files (non-versioned) are excluded
+    - Versioned files with `.v5.5.x.js.map` are deployed
+- **Modified Files:**
+  - `create-versioned-sourcemaps.js` - file list increased to 8 bundles
+  - `.github/workflows/deploy.yml` - optimized exclude pattern
+- **Results:**
+  - ✅ All source maps available in production
+  - ✅ Browser DevTools can display original source code
+  - ✅ Easier debugging in production
+  - ✅ PageSpeed warning resolved
+
+#### 🔄 Source Maps Automation in AssetVersionManager
+- **Problem:** Source maps had to be created manually via script
+- **Solution:**
+  - Added `createVersionedSourceMap()` method to `AssetVersionManager.php`:
+    - When creating versioned JS file, source map is automatically created
+    - Copies `.js.map` → `.v5.5.8.js.map`
+    - Automatically updates `sourceMappingURL` in JS file
+  - Updated `BrowserCacheAdmin::regenerateVersionedSourceMaps()`:
+    - Expanded webpack bundles list from 4 to 8
+    - Synchronized with code splitting changes
+- **Workflow:**
+  ```
+  User opens page
+      ↓
+  AssetVersionManager reads version from .env (e.g. 5.5.8)
+      ↓
+  Check: does app-vendor.v5.5.8.js exist?
+      ↓
+  If not → creates versioned files + source maps
+      ↓
+  Admin clicks "Clear Browser Cache"
+      ↓
+  BrowserCacheAdmin increments version: 5.5.8 → 5.5.9
+      ↓
+  Old files deleted + new files with source maps created
+  ```
+- **Benefits:**
+  - ✅ Fully automatic - no manual script needed
+  - ✅ Source map always matches JS file
+  - ✅ Cached for subsequent loads
+  - ✅ Full support for 8 webpack bundles
+  - ✅ sourceMappingURL always correct
+- **Modified Files:**
+  - `app/Support/AssetVersionManager.php` - added createVersionedSourceMap method
+  - `app/Admin/BrowserCacheAdmin.php` - updated webpack bundles list
+
 **Improvement:** 97% reduction (363ms saved)
 
 #### 📚 Documentation

@@ -74,6 +74,12 @@
   - کاهش 45% زمان اجرای JS
   - Webpack Tree Shaking
 
+- [**🗺️ اتوماسیون Source Maps**](SOURCE-MAPS-AUTOMATION.md) 🆕
+  - ساخت خودکار Source Maps
+  - ادغام با AssetVersionManager
+  - پشتیبانی 8 Webpack Bundle
+  - همگام‌سازی با Browser Cache
+
 - [**🎛️ کنترلر PageSpeed**](PAGESPEED_CONTROLLER.md)
   - API مدیریت PageSpeed
   - پنل ادمین
@@ -295,7 +301,6 @@ xpay_main_theme/
 
 - **توسعه دهنده اصلی:** Mohammad Salehi
 - **تیم فنی XPay**
-- **مستند سازی:** GitHub Copilot
 
 ---
 

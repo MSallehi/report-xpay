@@ -163,6 +163,64 @@ app-vendor.js         ~5 ms ✅
   - ✅ Lazy loading: chart فقط وقتی لازم است load می‌شود
 - **مستندات:** مراجعه کنید به `docs/JS-EXECUTION-OPTIMIZATION.md`
 
+#### 🗺️ رفع Source Maps برای Webpack Bundles
+- **مشکل:** PageSpeed warning "Missing source maps for large JavaScript"
+  - فایل‌های `.map` در deploy exclude شده بودند
+  - SyntaxError: Unexpected token '<' در source maps
+  - 404 errors برای تمام `.v5.5.x.js.map` فایل‌ها
+- **راه‌حل:**
+  - بروزرسانی `create-versioned-sourcemaps.js` برای شامل شدن همه bundle ها:
+    - runtime, app-react, app-highcharts, app-datetime, app-vendor
+    - app-calculator, app-chart, app-coins
+  - بروزرسانی `.github/workflows/deploy.yml`:
+    - حذف `assets/js/*.map` از exclude list
+    - فقط base files (non-versioned) exclude می‌شوند
+    - Versioned files با `.v5.5.x.js.map` deploy می‌شوند
+- **فایل‌های تغییریافته:**
+  - `create-versioned-sourcemaps.js` - لیست فایل‌ها به 8 bundle افزایش یافت
+  - `.github/workflows/deploy.yml` - exclude pattern بهینه شد
+- **نتیجه:**
+  - ✅ تمام source maps در production در دسترس هستند
+  - ✅ Browser DevTools می‌تواند کد اصلی را نمایش دهد
+  - ✅ Debugging در production راحت‌تر شد
+  - ✅ PageSpeed warning برطرف شد
+
+#### 🔄 اتوماسیون Source Maps در AssetVersionManager
+- **مشکل:** source map ها باید به صورت دستی توسط اسکریپت ساخته شوند
+- **راه‌حل:**
+  - اضافه شدن متد `createVersionedSourceMap()` به `AssetVersionManager.php`:
+    - هنگام ساخت فایل JS ورژن‌دار، source map هم خودکار ساخته می‌شود
+    - کپی فایل `.js.map` → `.v5.5.8.js.map`
+    - به‌روزرسانی خودکار `sourceMappingURL` در فایل JS
+  - به‌روزرسانی `BrowserCacheAdmin::regenerateVersionedSourceMaps()`:
+    - لیست webpack bundles از 4 به 8 افزایش یافت
+    - همگام با تغییرات code splitting
+- **چرخه کار:**
+  ```
+  کاربر صفحه را باز می‌کند
+      ↓
+  AssetVersionManager ورژن را از .env می‌خواند (مثلا 5.5.8)
+      ↓
+  بررسی: app-vendor.v5.5.8.js وجود دارد?
+      ↓
+  اگر نه → فایل‌های ورژن‌دار + source map ساخته می‌شوند
+      ↓
+  ادمین روی "Clear Browser Cache" کلیک می‌کند
+      ↓
+  BrowserCacheAdmin ورژن را افزایش می‌دهد: 5.5.8 → 5.5.9
+      ↓
+  فایل‌های قدیمی پاک + فایل‌های جدید با source maps ساخته می‌شوند
+  ```
+- **مزایا:**
+  - ✅ کاملا خودکار - نیازی به اسکریپت دستی نیست
+  - ✅ همیشه source map با فایل JS همخوانی دارد
+  - ✅ cache کردن برای بارگیری‌های بعدی
+  - ✅ پشتیبانی کامل از 8 webpack bundle
+  - ✅ sourceMappingURL همیشه صحیح است
+- **فایل‌های تغییر یافته:**
+  - `app/Support/AssetVersionManager.php` - اضافه شدن متد createVersionedSourceMap
+  - `app/Admin/BrowserCacheAdmin.php` - به‌روزرسانی لیست webpack bundles
+
 **بهبود:** 97% کاهش (363ms صرفه‌جویی)
 
 #### 📚 مستندات
