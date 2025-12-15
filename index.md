@@ -136,7 +136,13 @@
   - دستورالعمل‌های سریع
   - Troubleshooting
 
-- [**🖥️ Deploy روی cPanel**](CPANEL-DEPLOYMENT.md)
+- [**� تنظیم GitHub Secrets**](SECRETS-SETUP.md) 🆕
+  - راهنمای تنظیم FTP Staging و Production
+  - Secrets مورد نیاز برای Deploy
+  - تست و عیب‌یابی Deploy
+  - جداسازی محیط‌های Staging و Production
+
+- [**�🖥️ Deploy روی cPanel**](CPANEL-DEPLOYMENT.md)
   - راهنمای cPanel
   - FTP Upload
 
