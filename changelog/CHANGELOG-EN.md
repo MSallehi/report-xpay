@@ -4,6 +4,70 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.3.0] - 2025-12-21
+
+### ✨ New Features
+
+#### 🎛️ PageSpeed Optimizations Control System
+- **Added Master Switch** for enabling/disabling all PageSpeed optimizations
+  - `enable_optimizations` option in PageSpeed settings
+  - Ability to completely disable all optimizations with one click
+  - Blue highlighted UI for main switch in settings page
+
+- **Third-Party Scripts Control**
+  - `enable_third_party_scripts` option for managing tracking scripts
+  - Ability to disable Google Tag Manager, Najva, and Mediaad
+  - Independent optimization from other features
+
+- **Improved User Experience**
+  - Complete Persian descriptions for each option
+  - Better visual design for important options
+  - Clear separation between different options
+
+### 🐛 Bug Fixes
+
+#### 🔄 Fixed Cache Version Check Loop Issue
+- **Problem:** Query parameters `?_v=X.X.X&_t=timestamp` appeared on every page refresh
+- **Cause:** After redirect with query string, code was checking version again and redirecting repeatedly
+- **Solution:**
+  - Automatic detection of cache bust query parameters
+  - Automatic URL cleaning with `history.replaceState()` after reload
+  - Prevention of version re-check after first redirect
+- **Result:** 
+  - Clean URL after page refresh
+  - No repeated display of cache bust parameters
+  - One-time execution of cache clear process when version changes
+
+#### 📱 Fixed GIF Banner Display Issue on iOS
+- **Problem:** Mobile GIF banner was not displayed on iPhone devices
+- **Cause:** CSS class `mobile none` was causing `display: none` on iOS
+- **Solution:**
+  - Removed `none` class from `<img>` tag
+  - Added `<source>` tag for GIF format fallback
+  - Added inline styles to ensure proper display
+  - Improved compatibility with older iOS browsers
+- **Result:** Correct banner display on all iOS devices
+
+### 🔧 Improvements
+
+#### 📋 Settings Management System Enhancement
+- **PageSpeedAdmin.php:**
+  - Added new fields to storage system
+  - Improved default values
+  - Added validation for new settings
+
+- **PageSpeedController.php:**
+  - Check `enable_optimizations` before running any optimization
+  - Optimized decision-making logic for hooks
+  - Reduced overhead when optimizations are disabled
+
+- **header.php:**
+  - Fetch PageSpeed settings at file beginning
+  - Conditional loading of third-party scripts
+  - Improved compatibility with different settings
+
+---
+
 ## [2.2.0] - 2025-12-08
 
 ### ⚡ Performance Optimization
