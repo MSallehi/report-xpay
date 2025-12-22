@@ -37,6 +37,7 @@
 - [بهینه‌سازی Reflow](https://msallehi.github.io/report-xpay/FORCED_REFLOW_OPTIMIZATION)
 - [بهینه‌سازی Cache در CDN](https://msallehi.github.io/report-xpay/CDN-CACHE-OPTIMIZATION) 🆕
 - [بهینه‌سازی JavaScript Execution](https://msallehi.github.io/report-xpay/JS-EXECUTION-OPTIMIZATION) 🆕
+- [کنترل Cache Version Redirect](https://msallehi.github.io/report-xpay/CACHE-VERSION-REDIRECT) 🆕
 - [راهنمای Deploy](https://msallehi.github.io/report-xpay/DEPLOYMENT)
 
 ---
