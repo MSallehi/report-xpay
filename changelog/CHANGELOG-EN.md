@@ -8,6 +8,29 @@ All notable changes to this project will be documented in this file.
 
 ### ✨ New Features
 
+#### 🔄 Cache Version Redirect Control
+- **Added new option** to control page reload behavior when version changes
+  - `enable_cache_version_redirect` option in PageSpeed settings
+  - Two modes: with query string or silent reload
+  - Default: enabled (with query string)
+
+- **Enabled Mode (with Query String):**
+  - On version change: `/?_v=5.5.14&_t=timestamp`
+  - Guarantees fresh asset delivery
+  - Suitable for Production with CDN
+  - URL is cleaned immediately after reload
+
+- **Disabled Mode (Silent Reload):**
+  - No URL modification
+  - Simple `location.reload(true)`
+  - Better user experience
+  - Suitable for Development
+
+- **Complete Documentation:**
+  - Added `docs/CACHE-VERSION-REDIRECT.md` file
+  - Includes flowchart, use cases, and troubleshooting
+  - Both Persian and English explanations
+
 #### 🎛️ PageSpeed Optimizations Control System
 - **Added Master Switch** for enabling/disabling all PageSpeed optimizations
   - `enable_optimizations` option in PageSpeed settings
