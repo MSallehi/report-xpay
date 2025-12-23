@@ -56,6 +56,13 @@
   - Asset Versioning
   - 2,500+ خطوط مستندات
 
+- [**⚡ راهنمای توسعه‌دهندگان PageSpeed**](PAGESPEED-DEVELOPER-GUIDE.md) 🆕
+  - نحوه اضافه کردن CSS جدید
+  - نحوه اضافه کردن JavaScript جدید
+  - پیکربندی PageSpeedController
+  - Automatic Asset Detection
+  - Best Practices و Troubleshooting
+
 - [**⚡ بهینه‌سازی Forced Reflow**](FORCED_REFLOW_OPTIMIZATION.md)
   - تحلیل Reflows
   - Highcharts Optimization
@@ -95,6 +102,13 @@
   - تنظیمات CSP
   - رفع Violations
   - Best Practices
+
+- [**🔒 HSTS Security Policy**](HSTS-SECURITY.md) 🆕
+  - HTTP Strict Transport Security
+  - پیکربندی Nginx/Apache/cPanel
+  - استراتژی استقرار تدریجی
+  - راهنمای DevOps و SEO
+  - تست و Monitoring
 
 ### 🔧 پیکربندی و تنظیمات
 
