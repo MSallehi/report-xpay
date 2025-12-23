@@ -110,6 +110,13 @@
   - راهنمای DevOps و SEO
   - تست و Monitoring
 
+- [**🔒 Cross-Origin Policies (COOP/COEP/CORP)**](CROSS-ORIGIN-POLICIES.md) 🆕
+  - جداسازی Origin و محافظت از Spectre
+  - پیکربندی COOP/COEP/CORP
+  - راهنمای کامل برای Production
+  - تست Pop-ups و OAuth
+  - Troubleshooting و Best Practices
+
 ### 🔧 پیکربندی و تنظیمات
 
 - [**🌐 تنظیمات CDN**](CDN-CONFIGURATION.md)
