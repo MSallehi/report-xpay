@@ -98,7 +98,48 @@ ReflowOptimizer.setScrollPosition(element, top, left);
 
 ---
 
-### 2. Swiper Wrapper (جدید)
+### 2. DOM Interceptor (جدید) ⭐ **مهمترین فایل**
+**مسیر:** `assets/js/dom-interceptor.js`
+
+این interceptor **تمام** native DOM methods را override می‌کند تا **همه کتابخانه‌ها** (jQuery, Swiper, و هر چیز دیگری) به‌صورت خودکار optimize شوند.
+
+#### ویژگی‌ها:
+- ✅ Override کردن `getBoundingClientRect()`
+- ✅ Override کردن `getComputedStyle()`
+- ✅ Override کردن `offsetWidth`, `offsetHeight`, `offsetTop`, `offsetLeft`
+- ✅ Override کردن `clientWidth`, `clientHeight`
+- ✅ Override کردن `scrollWidth`, `scrollHeight`, `scrollTop`, `scrollLeft`
+- ✅ Override کردن jQuery methods: `.offset()`, `.width()`, `.height()`, `.scrollTop()`, `.scrollLeft()`
+- ✅ Automatic caching با 100ms timeout
+- ✅ Automatic batching برای تمام read/write operations
+
+#### نحوه کار:
+```javascript
+// بدون تغییر در کد شما!
+// DOM Interceptor به‌صورت خودکار کار می‌کند
+
+// مثال: jQuery
+$('#element').offset();  // ← Automatically batched!
+$('#element').width();   // ← Automatically cached!
+$('#element').scrollTop(100);  // ← Automatically batched!
+
+// مثال: Native JavaScript
+const width = element.offsetWidth;  // ← Automatically cached!
+const rect = element.getBoundingClientRect();  // ← Automatically batched!
+element.scrollTop = 100;  // ← Automatically batched!
+
+// هیچ تغییری در کد لازم نیست! همه چیز خودکار است
+```
+
+#### چرا این مهم است؟
+- ✅ **Third-party libraries** بدون تغییر optimize می‌شوند
+- ✅ **app-vendor.js** (jQuery, Swiper, etc.) همه optimize می‌شوند
+- ✅ **هر کد جدیدی** که اضافه می‌کنید خودکار optimize است
+- ✅ **صفر Forced Reflow** برای تمام کتابخانه‌ها
+
+---
+
+### 3. Swiper Wrapper (جدید)
 **مسیر:** `assets/js/swiper-wrapper.js`
 
 این wrapper Swiper library را با ReflowOptimizer wrap می‌کند.
@@ -122,7 +163,7 @@ const swiper = new Swiper('.swiper-container', {
 
 ---
 
-### 2. Custom-Coins.js (به‌روز شده)
+### 4. Custom-Coins.js (به‌روز شده)
 **مسیر:** `assets/js/custom-coins.js`
 
 #### تغییرات:
