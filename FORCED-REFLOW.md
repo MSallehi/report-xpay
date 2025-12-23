@@ -98,6 +98,30 @@ ReflowOptimizer.setScrollPosition(element, top, left);
 
 ---
 
+### 2. Swiper Wrapper (جدید)
+**مسیر:** `assets/js/swiper-wrapper.js`
+
+این wrapper Swiper library را با ReflowOptimizer wrap می‌کند.
+
+#### ویژگی‌ها:
+- ✅ Wraps Swiper constructor
+- ✅ Optimizes update(), updateSize(), updateSlides()
+- ✅ Batches setTranslate() and slideTo() operations
+- ✅ Caches getBoundingClientRect() calls
+- ✅ حفظ تمام API های Swiper
+
+#### نحوه کار:
+```javascript
+// بعد از load شدن این wrapper، Swiper به‌صورت خودکار optimize می‌شود
+const swiper = new Swiper('.swiper-container', {
+  slidesPerView: 3,
+  spaceBetween: 30,
+});
+// تمام DOM operations داخل Swiper حالا batched هستند
+```
+
+---
+
 ### 2. Custom-Coins.js (به‌روز شده)
 **مسیر:** `assets/js/custom-coins.js`
 
