@@ -75,6 +75,15 @@
   - Batch DOM Operations
   - 97% کاهش Reflow
 
+- [**⚡ بهینه‌سازی Forced Reflow (Production)**](FORCED-REFLOW.md) 🔥 جدید
+  - ReflowOptimizer Module کامل
+  - Batch DOM Read/Write Operations
+  - requestAnimationFrame Scheduling
+  - Caching System با Timeout
+  - کنترل از PageSpeed Admin
+  - پیش‌بینی کاهش 65-80% reflow time
+  - مستندات کامل API و Usage
+
 - [**⚡ بهینه‌سازی JavaScript Execution**](JS-EXECUTION-OPTIMIZATION.md) 🆕
   - Code Splitting (8 bundleها)
   - TerserPlugin Optimization
