@@ -2,7 +2,7 @@
 # XPay WordPress Theme Documentation
 
 > **نسخه:** 5.5.8  
-> **آخرین بروزرسانی:** 8 دسامبر 2025  
+> **آخرین بروزرسانی:** 27 دسامبر 2025  
 > **وضعیت:** 🟢 فعال و در حال توسعه
 
 ---
@@ -83,6 +83,21 @@
   - کنترل از PageSpeed Admin
   - پیش‌بینی کاهش 65-80% reflow time
   - مستندات کامل API و Usage
+
+- [**🚀 بهینه‌سازی جامع Performance**](PERFORMANCE-OPTIMIZATION.md) 🔥 جدیدترین
+  - PerformanceOptimizer Module کامل
+  - Lazy Loading برای Scripts, Styles, Images
+  - Widget Optimization (Chat, Modal, Price)
+  - Font Optimization با font-display: swap
+  - Core Web Vitals Monitoring
+  - کاهش 55% در LCP، 75% در FID، 80% در CLS
+  - راهنمای جامع 600+ خطی
+
+- [**⚡ راهنمای سریع Performance**](PERFORMANCE-QUICK-START.md) 🆕
+  - Quick Reference برای PerformanceOptimizer
+  - کدهای آماده و مثال‌ها
+  - Troubleshooting راه‌حل‌های سریع
+  - Checklist قبل از Deploy
 
 - [**⚡ بهینه‌سازی JavaScript Execution**](JS-EXECUTION-OPTIMIZATION.md) 🆕
   - Code Splitting (8 bundleها)
