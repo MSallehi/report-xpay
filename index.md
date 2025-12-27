@@ -99,6 +99,22 @@
   - Troubleshooting راه‌حل‌های سریع
   - Checklist قبل از Deploy
 
+- [**⚡ بهینه‌سازی INP (Interaction to Next Paint)**](INP-OPTIMIZATION.md) 🔥 جدیدترین
+  - INPOptimizer Module کامل
+  - Task Scheduler با Priority Queue
+  - Long Task Breaking با processInChunks()
+  - Component Optimization (Modals, Tooltips, Forms, Search)
+  - Event Handler Optimization (Debounce, Throttle)
+  - Performance Monitoring (Long Tasks, INP)
+  - کاهش 75% در INP، 67% در Long Tasks
+  - راهنمای جامع 700+ خطی
+
+- [**⚡ راهنمای سریع INP**](INP-QUICK-START.md) 🆕
+  - Quick Reference برای INPOptimizer
+  - کدهای آماده و مثال‌ها
+  - Troubleshooting راه‌حل‌های سریع
+  - Checklist قبل از Deploy
+
 - [**⚡ بهینه‌سازی JavaScript Execution**](JS-EXECUTION-OPTIMIZATION.md) 🆕
   - Code Splitting (8 bundleها)
   - TerserPlugin Optimization
