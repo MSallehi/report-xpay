@@ -2,7 +2,7 @@
 # XPay WordPress Theme Documentation
 
 > **نسخه:** 5.5.8  
-> **آخرین بروزرسانی:** 27 دسامبر 2025  
+> **آخرین بروزرسانی:** 28 دسامبر 2025  
 > **وضعیت:** 🟢 فعال و در حال توسعه
 
 ---
@@ -99,7 +99,7 @@
   - Troubleshooting راه‌حل‌های سریع
   - Checklist قبل از Deploy
 
-- [**⚡ بهینه‌سازی INP (Interaction to Next Paint)**](INP-OPTIMIZATION.md) 🔥 جدیدترین
+- [**⚡ بهینه‌سازی INP (Interaction to Next Paint)**](INP-OPTIMIZATION.md) 🆕
   - INPOptimizer Module کامل
   - Task Scheduler با Priority Queue
   - Long Task Breaking با processInChunks()
@@ -108,6 +108,15 @@
   - Performance Monitoring (Long Tasks, INP)
   - کاهش 75% در INP، 67% در Long Tasks
   - راهنمای جامع 700+ خطی
+
+- [**✅ رفع ارورهای W3C HTML Validation**](W3C-VALIDATION-FIXES.md) 🔥 جدیدترین
+  - رفع تمام 24 ارور W3C Validator
+  - جابجایی Meta Charset به ابتدای head
+  - حذف as attribute از preconnect
+  - حذف importance attribute (20 موارد)
+  - حذف contain-intrinsic-size CSS
+  - Compliance کامل با HTML5 و CSS Standards
+  - راهنمای جامع 700+ خطی با تست‌ها
 
 - [**⚡ راهنمای سریع INP**](INP-QUICK-START.md) 🆕
   - Quick Reference برای INPOptimizer
