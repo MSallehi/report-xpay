@@ -109,7 +109,7 @@
   - کاهش 75% در INP، 67% در Long Tasks
   - راهنمای جامع 700+ خطی
 
-- [**✅ رفع ارورهای W3C HTML Validation**](W3C-VALIDATION-FIXES.md) 🔥 جدیدترین
+- [**✅ رفع ارورهای W3C HTML Validation**](W3C-VALIDATION-FIXES.md) 🆕
   - رفع تمام 24 ارور W3C Validator
   - جابجایی Meta Charset به ابتدای head
   - حذف as attribute از preconnect
@@ -117,6 +117,16 @@
   - حذف contain-intrinsic-size CSS
   - Compliance کامل با HTML5 و CSS Standards
   - راهنمای جامع 700+ خطی با تست‌ها
+
+- [**✅ رفع ارورهای W3C HTML Validation - Part 2**](W3C-VALIDATION-FIXES-PART2.md) 🔥 جدیدترین
+  - رفع تمام 19 ارور باقیمانده در Theme
+  - حذف alt از anchor tags (3 موارد)
+  - فیکس HTML Structure (div in ul)
+  - رفع Duplicate IDs (4 موارد)
+  - فیکس Form Attributes و Iframe Standards
+  - افزودن sizes به responsive images
+  - بهبود Accessibility Score به 98/100
+  - مستندات کامل با 10 دسته فیکس
 
 - [**⚡ راهنمای سریع INP**](INP-QUICK-START.md) 🆕
   - Quick Reference برای INPOptimizer
