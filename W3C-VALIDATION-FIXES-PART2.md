@@ -1108,6 +1108,112 @@ From line 1290, column 25; to line 1290, column 107
 
 ---
 
+### 19. Duplicate ID `phone_number` ❌➜✅
+
+#### مشکل
+```html
+<!-- ❌ Before: Duplicate IDs across multiple forms -->
+<!-- home.php - Hero section registration form -->
+<input id="phone_number" name="phone_number" placeholder="شماره موبایل خود را وارد نمایید">
+
+<!-- gift-form-xpay.php - Gift form -->
+<input id="phone_number" name="phone_number" placeholder="شماره موبایل خود را وارد نمایید">
+
+<!-- help.php - Search form (incorrect usage) -->
+<input id="phone_number" name="phone_number" placeholder="موضوع را وارد کنید">
+
+<!-- comments.php - Comment form -->
+<input id="phone_number" name="phone_number">
+```
+
+**W3C Error:**
+```
+Error: Duplicate ID phone_number.
+From line 1188, column 29; to line 1201, column 81
+```
+
+**علت:** 
+- 4 فرم مختلف از یک ID `phone_number` استفاده می‌کردند
+- IDs باید در کل صفحه **unique** باشند
+- home.php فایل gift-form-xpay.php را include می‌کند → 2 ID تکراری در یک صفحه
+
+#### راه‌حل
+```html
+<!-- ✅ After: Unique IDs with descriptive suffixes -->
+<!-- home.php - Hero section -->
+<input id="phone_number_home" name="phone_number" placeholder="شماره موبایل خود را وارد نمایید">
+
+<!-- gift-form-xpay.php - Gift form -->
+<input id="phone_number_gift" name="phone_number" placeholder="شماره موبایل خود را وارد نمایید">
+
+<!-- help.php - Search form (fixed naming) -->
+<input id="search_query" name="search_query" placeholder="موضوع را وارد کنید">
+
+<!-- comments.php - Comment form -->
+<input id="phone_number_comment" name="phone_number">
+
+<!-- comment-phone-metabox.php - Admin metabox -->
+<input id="phone_number_admin" name="phone_number">
+```
+
+**توضیح:**
+- `phone_number` → `phone_number_home` (فرم ثبت نام صفحه اصلی)
+- `phone_number` → `phone_number_gift` (فرم دریافت جایزه)
+- `phone_number` → `search_query` (help.php - این اصلاً phone نبود، search input بود!)
+- `phone_number` → `phone_number_comment` (فرم کامنت)
+- `phone_number` → `phone_number_admin` (admin metabox)
+
+**فایل‌های تغییر یافته:**
+
+1. **views/pages/home.php** (Line 34)
+   - `id="phone_number"` → `id="phone_number_home"`
+   - Context: Hero section registration form
+
+2. **templates/gift-form/gift-form-xpay.php** (Line 40)
+   - `id="phone_number"` → `id="phone_number_gift"`
+   - Context: Airdrop/gift claim form
+
+3. **views/pages/help.php** (Line 28)
+   - `id="phone_number"` → `id="search_query"`
+   - `name="phone_number"` → `name="search_query"`
+   - Context: Help page search form (incorrect field naming fixed)
+
+4. **comments.php** (Line 39)
+   - `id="phone_number"` → `id="phone_number_comment"`
+   - Context: Comment form phone field
+
+5. **views/admin/comment-phone-metabox.php** (Line 8)
+   - `id="phone_number"` → `id="phone_number_admin"`
+   - Context: Admin panel comment metabox
+
+**JavaScript Updates:**
+
+6. **assets/js/gift-box.js** (Line 19)
+   - `phoneNumber: "#phone_number"` → `phoneNumber: "#phone_number_gift"`
+
+7. **assets/js/gift-box-old.js** (Line 19)
+   - `phoneNumber: "#phone_number"` → `phoneNumber: "#phone_number_gift"`
+
+8. **assets/js/app-old.js** (Line 1051)
+   - `airdropMain.find("#phone_number")` → `airdropMain.find("#phone_number_gift")`
+
+**تأثیر:**
+- ✅ HTML5 Valid: All IDs now unique across pages
+- ✅ JavaScript: Selectors updated for gift form
+- ✅ Semantic: Fixed incorrect field naming in help.php (search ≠ phone)
+- ✅ No breaking changes: `name` attributes preserved (except help.php fix)
+- ✅ Form submissions: Work correctly (server uses `name` not `id`)
+
+**Note on home.php:**
+- JavaScript برای home.php از class selector استفاده می‌کند (`.phone-number`)
+- تغییر ID بر functionality تأثیری ندارد
+
+**Browser Compatibility:**
+- ✅ All modern browsers
+- ✅ No breaking changes
+
+---
+
 ## 📖 References
 
 ### W3C Standards

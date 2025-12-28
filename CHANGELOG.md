@@ -2,6 +2,45 @@
 
 تمامی تغییرات مهم در این پروژه در این فایل مستند می‌شود.
 
+## [نسخه 1.5.1] - 2025-12-28 (Update 5)
+
+### 🐛 رفع باگ (Bug Fixes)
+
+#### 5. Duplicate ID phone_number (W3C Validation Error)
+- **Problem Fixed**: ID تکراری `phone_number` در 4 فرم مختلف (خطای W3C)
+  - فایل‌ها:
+    - `views/pages/home.php` - فرم ثبت نام hero section
+    - `templates/gift-form/gift-form-xpay.php` - فرم دریافت جایزه
+    - `views/pages/help.php` - فرم جستجو (نام اشتباه!)
+    - `comments.php` - فرم کامنت
+    - `views/admin/comment-phone-metabox.php` - admin metabox
+  - راه‌حل: تغییر IDs به unique values با suffixes معنادار
+  - تغییرات HTML:
+    - `phone_number` → `phone_number_home` (home.php)
+    - `phone_number` → `phone_number_gift` (gift-form-xpay.php)
+    - `phone_number` → `search_query` (help.php - این search input بود نه phone!)
+    - `phone_number` → `phone_number_comment` (comments.php)
+    - `phone_number` → `phone_number_admin` (comment-phone-metabox.php)
+  - تغییرات JavaScript:
+    - `assets/js/gift-box.js`: `#phone_number` → `#phone_number_gift`
+    - `assets/js/gift-box-old.js`: `#phone_number` → `#phone_number_gift`
+    - `assets/js/app-old.js`: `#phone_number` → `#phone_number_gift`
+  - تأثیر: ✅ HTML5 Valid, ✅ بهبود semantic naming (help.php)
+
+### 📊 نتایج Validation
+
+| فایل | IDs قبل | IDs بعد | وضعیت |
+|------|---------|---------|-------|
+| home.php | phone_number | phone_number_home | ✅ |
+| gift-form-xpay.php | phone_number | phone_number_gift | ✅ |
+| help.php | phone_number | search_query | ✅ (نام درست شد) |
+| comments.php | phone_number | phone_number_comment | ✅ |
+| comment-phone-metabox.php | phone_number | phone_number_admin | ✅ |
+
+**نتیجه:** تمام IDs unique شدند + semantic naming بهبود یافت
+
+---
+
 ## [نسخه 1.5.1] - 2025-12-28 (Update 4)
 
 ### 🐛 رفع باگ (Bug Fixes)
