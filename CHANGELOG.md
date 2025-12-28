@@ -2,6 +2,39 @@
 
 تمامی تغییرات مهم در این پروژه در این فایل مستند می‌شود.
 
+## [نسخه 1.5.1] - 2025-12-28 (Update 4)
+
+### 🐛 رفع باگ (Bug Fixes)
+
+#### 4. Duplicate ID gift-api-loader (W3C Validation Error)
+- **Problem Fixed**: ID تکراری `gift-api-loader` در دو loader (خطای W3C)
+  - فایل‌ها:
+    - `templates/gift-form/gift-form-xpay.php` (2 موارد)
+    - `assets/js/gift-box.js` (2 selectors)
+    - `assets/js/gift-box-old.js` (2 selectors)
+    - `assets/js/app-new.js` (1 selector)
+    - `assets/js/app-old.js` (2 selectors)
+  - راه‌حل: تغییر IDs به unique values با suffixes معنادار
+  - تغییرات:
+    - `gift-api-loader` → `gift-api-loader-start` (در start-box)
+    - `gift-api-loader` → `gift-api-loader-form` (در form-box)
+  - JavaScript selectors:
+    - `.start-box #gift-api-loader` → `#gift-api-loader-start`
+    - `.form-box #gift-api-loader` → `#gift-api-loader-form`
+  - تأثیر: ✅ HTML5 Valid, بدون تغییر در functionality
+
+### 📊 نتایج Validation
+
+| Metric | نسخه 1.5.1 (Update 3) | نسخه 1.5.1 (Update 4) |
+|--------|------------------------|------------------------|
+| Total W3C Errors | 1 | **0** |
+| Theme Errors | 0 | **0** |
+| WordPress Core Errors | 1 | **0** |
+
+**🎉 تحقق 100% موفقیت: تمام 43 خطای W3C فیکس شد!**
+
+---
+
 ## [نسخه 1.5.1] - 2025-12-28 (Update 3)
 
 ### 🐛 رفع باگ (Bug Fixes)

@@ -1028,6 +1028,86 @@ Location: Line 8299, column 21
 
 ---
 
+### 18. Duplicate ID `gift-api-loader` ❌➜✅
+
+#### مشکل
+```html
+<!-- ❌ Before: Duplicate IDs -->
+<div class="start-box">
+    <div id="gift-api-loader" class="gift-api-loader">
+        <img src="loader.svg" alt="loader" />
+    </div>
+</div>
+
+<div class="form-box">
+    <div id="gift-api-loader" class="gift-api-loader">
+        <img src="loader.svg" alt="loader" />
+    </div>
+</div>
+```
+
+**W3C Error:**
+```
+Error: Duplicate ID gift-api-loader.
+From line 1290, column 25; to line 1290, column 107
+```
+
+**علت:** IDs باید در کل صفحه **unique** باشند. دو loader برای دو فرم مختلف (start و form) از یک ID استفاده می‌کردند.
+
+#### راه‌حل
+```html
+<!-- ✅ After: Unique IDs with descriptive suffixes -->
+<div class="start-box">
+    <div id="gift-api-loader-start" class="gift-api-loader">
+        <img src="loader.svg" alt="loader" />
+    </div>
+</div>
+
+<div class="form-box">
+    <div id="gift-api-loader-form" class="gift-api-loader">
+        <img src="loader.svg" alt="loader" />
+    </div>
+</div>
+```
+
+**توضیح:**
+- `gift-api-loader` → `gift-api-loader-start` (برای start-box)
+- `gift-api-loader` → `gift-api-loader-form` (برای form-box)
+- Suffixes بیانگر context استفاده هستند
+
+**فایل‌های تغییر یافته:**
+
+1. **templates/gift-form/gift-form-xpay.php**
+   - Line 75: `id="gift-api-loader"` → `id="gift-api-loader-start"`
+   - Line 139: `id="gift-api-loader"` → `id="gift-api-loader-form"`
+
+2. **assets/js/gift-box.js**
+   - Line 25: `".start-box #gift-api-loader"` → `"#gift-api-loader-start"`
+   - Line 26: `".form-box #gift-api-loader"` → `"#gift-api-loader-form"`
+
+3. **assets/js/gift-box-old.js**
+   - Line 25: `".start-box #gift-api-loader"` → `"#gift-api-loader-start"`
+   - Line 26: `".form-box #gift-api-loader"` → `"#gift-api-loader-form"`
+
+4. **assets/js/app-new.js**
+   - Line 733: `formBox.find("#gift-api-loader")` → `formBox.find("#gift-api-loader-form")`
+
+5. **assets/js/app-old.js**
+   - Line 1163: `airdropMain.find("#gift-api-loader")` → `airdropMain.find("#gift-api-loader-start")`
+   - Line 1318: `formBox.find("#gift-api-loader")` → `formBox.find("#gift-api-loader-form")`
+
+**تأثیر:**
+- ✅ HTML5 Valid: IDs now unique across page
+- ✅ JavaScript: Selectors updated to match new IDs
+- ✅ Functionality: No change in behavior
+- ✅ Maintainability: Clearer naming convention
+
+**Browser Compatibility:**
+- ✅ All modern browsers
+- ✅ No breaking changes
+
+---
+
 ## 📖 References
 
 ### W3C Standards
