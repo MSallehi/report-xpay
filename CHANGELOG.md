@@ -2,6 +2,35 @@
 
 تمامی تغییرات مهم در این پروژه در این فایل مستند می‌شود.
 
+## [نسخه 1.5.1] - 2025-12-28 (Update 6)
+
+### 🐛 رفع باگ (Bug Fixes)
+
+#### 6. Unclosed Element ul (W3C Validation Error)
+- **Problem Fixed**: تگ باز کننده `<ul>` به جای بسته کننده `</ul>` (خطای W3C)
+  - فایل: `header.php` (2 مورد)
+  - راه‌حل: تغییر `<ul>` به `</ul>` برای بستن صحیح لیست‌ها
+  - موارد فیکس شده:
+    - Line 626: `<ul>` → `</ul>` (mobile menu - result-of-posts-mobile)
+    - Line 691: `<ul>` → `</ul>` (search box - result-of-posts-search)
+  - Context: لیست پست‌ها در mobile menu و search box
+  - تأثیر: ✅ HTML5 Valid, ✅ DOM structure صحیح, ✅ بدون تأثیر visual
+
+### 📊 تأثیرات
+
+**HTML Structure:**
+- ✅ Proper element closing
+- ✅ Correct DOM nesting
+- ✅ No browser quirks mode
+- ✅ Screen reader compatible
+
+**چرا مهم بود:**
+- Unclosed elements باعث مشکل در DOM tree می‌شود
+- CSS selectors ممکن بود اشتباه کار کنند
+- JavaScript DOM traversal ممکن بود fail شود
+
+---
+
 ## [نسخه 1.5.1] - 2025-12-28 (Update 5)
 
 ### 🐛 رفع باگ (Bug Fixes)

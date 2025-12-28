@@ -1211,6 +1211,95 @@ From line 1188, column 29; to line 1201, column 81
 **Browser Compatibility:**
 - ✅ All modern browsers
 - ✅ No breaking changes
+---
+
+### 20. Unclosed Element `<ul>` ❌➜✅
+
+#### مشکل
+```html
+<!-- ❌ Before: Opening tag instead of closing -->
+<ul class="post-list flex column result-of-posts" id="result-of-posts-mobile">
+    <li>...</li>
+    <li>...</li>
+    <li>...</li>
+    <ul>  <!-- ❌ Wrong! Should be </ul> -->
+</div>
+
+<ul class="post-list flex column result-of-posts" id="result-of-posts-search">
+    <li>...</li>
+    <li>...</li>
+    <li>...</li>
+    <ul>  <!-- ❌ Wrong! Should be </ul> -->
+</div>
+```
+
+**W3C Error:**
+```
+Error: Unclosed element ul.
+From line 586, column 13; to line 586, column 90
+<ul class="post-list flex column result-of-posts" id="result-of-posts-search">
+```
+
+**علت:** 
+- تگ `<ul>` (opening) به جای `</ul>` (closing) استفاده شده بود
+- 2 مورد در header.php:
+  - Mobile menu posts list (خط 599-626)
+  - Search box posts list (خط 672-691)
+
+#### راه‌حل
+```html
+<!-- ✅ After: Proper closing tag -->
+<ul class="post-list flex column result-of-posts" id="result-of-posts-mobile">
+    <li>...</li>
+    <li>...</li>
+    <li>...</li>
+</ul>  <!-- ✅ Correct closing tag -->
+
+<ul class="post-list flex column result-of-posts" id="result-of-posts-search">
+    <li>...</li>
+    <li>...</li>
+    <li>...</li>
+</ul>  <!-- ✅ Correct closing tag -->
+```
+
+**فایل تغییر یافته:**
+
+**header.php** (2 fixes)
+- Line 626: `<ul>` → `</ul>` (mobile menu - result-of-posts-mobile)
+- Line 691: `<ul>` → `</ul>` (search box - result-of-posts-search)
+
+**Context:**
+```php
+// Mobile menu
+<ul class="post-list flex column result-of-posts" id="result-of-posts-mobile">
+    <?php
+    // WP_Query loop for posts
+    ?>
+</ul>  <!-- Fixed -->
+
+// Search box
+<ul class="post-list flex column result-of-posts" id="result-of-posts-search">
+    <?php
+    // WP_Query loop for posts
+    ?>
+</ul>  <!-- Fixed -->
+```
+
+**تأثیر:**
+- ✅ HTML5 Valid: Proper element closing
+- ✅ DOM Structure: Correct nesting
+- ✅ Browser Parsing: No quirks mode issues
+- ✅ Accessibility: Screen readers can parse correctly
+
+**Why This Matters:**
+- **Browser Parsing**: Unclosed elements cause DOM tree issues
+- **CSS Styling**: Can affect sibling/child selectors
+- **JavaScript**: querySelector/DOM traversal may fail
+- **Validation**: Invalid HTML fails W3C compliance
+
+**Browser Compatibility:**
+- ✅ All modern browsers
+- ✅ No visual changes (browsers auto-corrected)
 
 ---
 
