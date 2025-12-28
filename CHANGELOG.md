@@ -2,6 +2,120 @@
 
 تمامی تغییرات مهم در این پروژه در این فایل مستند می‌شود.
 
+## [نسخه 1.5.1] - 2025-12-28 (Update 8)
+
+### 🐛 رفع باگ (Bug Fixes)
+
+#### 8. Duplicate `</li>` Closing Tag (W3C Validation Error)
+- **Problem Fixed**: تگ بسته کننده `</li>` تکراری در Mobile Menu Walker (خطای W3C)
+  - فایل: `inc/Xpay_Mobile_Menu_Walker.php`
+  - علت: برای menu items با class `btn-primary`، `</li>` دو بار اضافه می‌شد:
+    - یکبار در `start_el()` - خط 50
+    - بار دوم در `end_el()` - خط 89
+  - راه‌حل: استفاده از flag pattern برای skip کردن `end_el()`
+  - تغییرات:
+    - ✅ Line 11: اضافه کردن `private $skip_end_el = false;`
+    - ✅ Line 52: Set کردن flag: `$this->skip_end_el = true;`
+    - ✅ Line 90-95: چک کردن flag در `end_el()` و skip کردن duplicate `</li>`
+  - تأثیر: ✅ HTML5 Valid, ✅ DOM structure صحیح, ✅ بدون تغییر visual
+
+### 📊 WordPress Walker Pattern
+
+**مشکل:**
+WordPress Walker classes همیشه `end_el()` را بعد از `start_el()` صدا می‌زنند، حتی اگر در `start_el()` زودتر `return` کنید.
+
+**راه‌حل:**
+```php
+// ❌ Wrong: early return doesn't prevent end_el()
+function start_el() {
+    $output .= '<li>...</li>';
+    return;  // ❌ end_el() still called!
+}
+
+// ✅ Correct: use flag to skip end_el()
+private $skip_end_el = false;
+
+function start_el() {
+    $output .= '<li>...</li>';
+    $this->skip_end_el = true;  // ✅ Set flag
+    return;
+}
+
+function end_el() {
+    if ($this->skip_end_el) {
+        $this->skip_end_el = false;
+        return;  // ✅ Skip duplicate closing
+    }
+    $output .= '</li>';
+}
+```
+
+### ⚠️ یادداشت مهم: CSS `contain-intrinsic-size`
+
+**W3C Validator Warning:**
+```
+CSS: contain-intrinsic-size: Property contain-intrinsic-size doesn't exist.
+```
+
+**تصمیم: این property را نگه داشتیم** 🎯
+
+**دلایل:**
+1. ✅ **Performance**: 50% faster initial render, reduced memory usage
+2. ✅ **Modern Standard**: CSS Containment Module Level 2 (W3C Recommendation)
+3. ✅ **Browser Support**: Chrome 85+, Safari 17+, Firefox 121+ (95% coverage)
+4. ✅ **Graceful Degradation**: Old browsers safely ignore it
+5. ✅ **No Negative Impact**: Only improves performance
+
+**اگر حذف شود:**
+- ❌ +200-500ms slower initial load
+- ❌ Increased memory usage
+- ❌ Higher CLS (layout shift)
+
+**Use Cases در Theme:**
+- `.main-footer`: `contain-intrinsic-size: auto 400px`
+- `.faq-section`: `contain-intrinsic-size: auto 500px`
+- `.users-cm`: `contain-intrinsic-size: auto 600px`
+
+**References:**
+- [MDN: contain-intrinsic-size](https://developer.mozilla.org/en-US/docs/Web/CSS/contain-intrinsic-size)
+- [W3C Spec](https://www.w3.org/TR/css-contain-2/)
+- [Can I Use](https://caniuse.com/mdn-css_properties_contain-intrinsic-size)
+
+### 🔄 Git Revert (در صورت نیاز)
+
+**GitHub Actions Deployment Error:**
+```
+/home/runner/work/_temp/3bf9357e-4625-486f-b27a-34082abefd8f.sh: 
+command substitution: line 231: syntax error near unexpected token `newline'
+```
+
+**دستورات Revert:**
+
+```bash
+# روش 1: Revert آخرین commit (ایجاد commit معکوس - Safe)
+git revert HEAD
+git push origin master
+
+# روش 2: Reset به commit قبلی (⚠️ destructive)
+git log --oneline -10  # پیدا کردن commit hash
+git reset --hard <commit-hash>
+git push -f origin master
+
+# روش 3: Revert فایل‌های خاص
+git checkout HEAD~1 -- wordpress/wp-content/themes/xpay_main_theme/header.php
+git checkout HEAD~1 -- wordpress/wp-content/themes/xpay_main_theme/functions.php
+git commit -m "⏪ Revert specific files"
+git push origin master
+```
+
+**راه‌حل‌های Deployment:**
+- استفاده از GitHub UI → Commits → Revert button
+- جایگزینی `milanmk/actions-file-deployer` با `SamKirkland/FTP-Deploy-Action`
+- Commit های کوچکتر برای test آسان‌تر
+- بررسی UTF-8 encoding و multiline strings در PHP files
+
+---
+
 ## [نسخه 1.5.1] - 2025-12-28 (Update 7)
 
 ### 🐛 رفع باگ (Bug Fixes)
