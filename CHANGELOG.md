@@ -2,6 +2,36 @@
 
 تمامی تغییرات مهم در این پروژه در این فایل مستند می‌شود.
 
+## [نسخه 1.5.1] - 2025-12-28 (Update)
+
+### 🐛 رفع باگ (Bug Fix)
+
+#### WordPress Global Styles in Body (W3C Validation Error)
+- **Problem Fixed**: `<style id='global-styles-inline-css'>` در `<body>` (خطای W3C)
+  - فایل: `functions.php`
+  - راه‌حل: جابجایی global styles از footer به head
+  - Implementation:
+    ```php
+    remove_action('wp_footer', 'wp_enqueue_global_styles', 1);
+    add_action('wp_head', 'wp_enqueue_global_styles', 100);
+    ```
+  - تأثیر: ✅ HTML5 Valid, بدون تأثیر بر styling
+
+### 📊 نتایج Validation
+
+| Metric | نسخه 1.5.1 (Before) | نسخه 1.5.1 (After) |
+|--------|---------------------|---------------------|
+| Total W3C Errors | 4 | **3** |
+| Theme Errors | 0 | **0** |
+| WordPress Core Errors | 4 | **3** |
+
+**ارورهای باقیمانده (WordPress Core):**
+- `contain-intrinsic-size` - قابل نادیده‌گرفتن
+- `type="speculationrules"` - قابل نادیده‌گرفتن
+- `type="text/javascript"` - قابل نادیده‌گرفتن
+
+---
+
 ## [نسخه 1.5.1] - 2025-12-28
 
 ### ✨ افزوده شده (Added)
