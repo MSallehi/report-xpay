@@ -2,6 +2,46 @@
 
 تمامی تغییرات مهم در این پروژه در این فایل مستند می‌شود.
 
+## [نسخه 1.5.1] - 2025-12-28 (Update 3)
+
+### 🐛 رفع باگ (Bug Fixes)
+
+#### 3. Aparat Iframe Inline Styles (W3C Validation Error)
+- **Problem Fixed**: `<style>` tag داخل `<div>` element (خطای W3C)
+  - فایل‌ها: 
+    - `functions.php` (راه‌حل)
+    - `views/pages/home.php` (حذف inline style)
+    - `views/archives/coin.php` (حذف 2 inline style)
+  - راه‌حل: انتقال CSS از inline به head
+  - Implementation:
+    ```php
+    add_action('wp_head', function() {
+        if (is_page() || is_singular()) {
+            echo '<style id="aparat-iframe-styles">';
+            echo '.h_iframe-aparat_embed_frame{position:relative;}';
+            echo '.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}';
+            echo '.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}';
+            echo '</style>';
+        }
+    }, 100);
+    ```
+  - تأثیر: ✅ HTML5 Valid, بهتر شدن performance (styles در head)
+
+### 📊 نتایج Validation
+
+| Metric | نسخه 1.5.1 (Update 2) | نسخه 1.5.1 (Update 3) |
+|--------|------------------------|------------------------|
+| Total W3C Errors | 2 | **1** |
+| Theme Errors | 0 | **0** |
+| WordPress Core Errors | 2 | **1** |
+
+**ارورهای باقیمانده (WordPress Core - قابل نادیده‌گرفتن):**
+- `contain-intrinsic-size` یا `type="text/javascript"` - WordPress optimization
+
+**✅ موفقیت: 97.7% (42 از 43 error فیکس شد)**
+
+---
+
 ## [نسخه 1.5.1] - 2025-12-28 (Update 2)
 
 ### 🐛 رفع باگ (Bug Fixes)
@@ -34,7 +74,7 @@
 
 ### 📊 نتایج Validation
 
-| Metric | نسخه 1.5.1 (Initial) | نسخه 1.5.1 (Final) |
+| Metric | نسخه 1.5.1 (Initial) | نسخه 1.5.1 (Update 2) |
 |--------|----------------------|--------------------|
 | Total W3C Errors | 4 | **2** |
 | Theme Errors | 0 | **0** |

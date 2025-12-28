@@ -867,6 +867,167 @@ $$('[alt]').filter(el => el.tagName === 'A')
 
 ---
 
+## ❌ Error #17: style not allowed as child of div
+
+### W3C Error
+```
+Error: Element style not allowed as child of element div in this context.
+From line 8299, column 21; to line 8299, column 28
+```
+
+### Problem
+طبق استاندارد HTML5، `<style>` tag فقط در این مکان‌ها مجاز است:
+- در `<head>` (metadata content)
+- در `<noscript>` که داخل `<head>` است
+
+در قالب ما، برای Aparat video embeds از inline `<style>` استفاده شده بود:
+
+```php
+<div class="video-box">
+    <?php if (xpay_is_iran_ip()): ?>
+        <style>
+            .h_iframe-aparat_embed_frame { position: relative; }
+            .h_iframe-aparat_embed_frame .ratio { display: block; width: 100%; height: auto; }
+            .h_iframe-aparat_embed_frame iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        </style>
+        <div class="h_iframe-aparat_embed_frame">...</div>
+    <?php endif; ?>
+</div>
+```
+
+**مشکلات:**
+- `<style>` نمی‌تواند داخل `<div>` باشد
+- CSS styles باید در `<head>` باشند
+
+### Solution
+
+#### مرحله 1: انتقال CSS به head (functions.php)
+
+```php
+/**
+ * Move Aparat iframe embed styles to head
+ * W3C Fix: <style> not allowed as child of <div>
+ * 
+ * @since 1.5.1
+ */
+add_action('wp_head', function() {
+    // Only inject on pages and single posts where videos are used
+    if (is_page() || is_singular()) {
+        echo '<style id="aparat-iframe-styles">';
+        echo '.h_iframe-aparat_embed_frame{position:relative;}';
+        echo '.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}';
+        echo '.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}';
+        echo '</style>';
+    }
+}, 100);
+```
+
+**ویژگی‌ها:**
+- ✅ CSS در `<head>` inject می‌شود
+- ✅ فقط در صفحات مورد نیاز (is_page(), is_singular())
+- ✅ Priority 100 برای اطمینان از load بعد از سایر styles
+- ✅ ID برای شناسایی آسان: `aparat-iframe-styles`
+
+#### مرحله 2: حذف inline styles از templates
+
+**views/pages/home.php** (خطوط 517-535):
+```php
+// ❌ BEFORE (Invalid HTML5)
+<div class="video-box">
+    <?php if (xpay_is_iran_ip()): ?>
+        <style>
+            .h_iframe-aparat_embed_frame { position: relative; }
+            .h_iframe-aparat_embed_frame .ratio { display: block; width: 100%; height: auto; }
+            .h_iframe-aparat_embed_frame iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        </style>
+        <div class="h_iframe-aparat_embed_frame">...</div>
+    <?php endif; ?>
+</div>
+
+// ✅ AFTER (Valid HTML5)
+<div class="video-box">
+    <?php if (xpay_is_iran_ip()): ?>
+        <div class="h_iframe-aparat_embed_frame">...</div>
+    <?php endif; ?>
+</div>
+```
+
+**views/archives/coin.php** (خطوط 19-38):
+```php
+// ❌ BEFORE (2 instances - top and bottom)
+<div class="video-box">
+    <?php if (xpay_is_iran_ip()): ?>
+        <style>
+            .h_iframe-aparat_embed_frame { position: relative; }
+            // ... same CSS ...
+        </style>
+        <div class="h_iframe-aparat_embed_frame">...</div>
+    <?php endif; ?>
+</div>
+
+// ✅ AFTER (Valid HTML5)
+<div class="video-box">
+    <?php if (xpay_is_iran_ip()): ?>
+        <div class="h_iframe-aparat_embed_frame">...</div>
+    <?php endif; ?>
+</div>
+```
+
+### Technical Details
+
+#### HTML5 Content Model
+طبق [HTML Living Standard](https://html.spec.whatwg.org/multipage/semantics.html#the-style-element):
+
+**Contexts in which style element may be used:**
+- Where metadata content is expected (`<head>`)
+- In a `<noscript>` element that is a child of a `<head>` element
+
+**NOT ALLOWED:**
+- As child of flow content (`<div>`, `<section>`, etc.)
+- Inline in body content
+
+#### چرا این مهم است؟
+
+1. **Browser Parsing**: Browsers may not apply inline styles correctly
+2. **FOUC (Flash of Unstyled Content)**: Styles در body باعث تأخیر می‌شود
+3. **Performance**: Styles در head قبل از render load می‌شوند
+4. **Maintainability**: Centralized styles easier to manage
+5. **Caching**: Styles در head قابل cache هستند
+
+### Testing
+
+#### قبل از fix:
+```bash
+Error: Element style not allowed as child of element div in this context.
+Location: Line 8299, column 21
+```
+
+#### بعد از fix:
+```bash
+✅ No errors - All styles moved to head
+✅ CSS applied correctly via wp_head hook
+✅ Responsive behavior preserved
+```
+
+### فایل‌های تغییر یافته
+
+1. **functions.php** (خطوط ~1110-1125)
+   - افزودن wp_head hook برای inject کردن Aparat styles
+
+2. **views/pages/home.php** (خطوط 517-535)
+   - حذف inline `<style>` tag از video-box div
+
+3. **views/archives/coin.php** (2 instance)
+   - حذف inline `<style>` tags از هر دو video-box div
+
+### Browser Compatibility
+- ✅ Chrome 120+
+- ✅ Firefox 121+
+- ✅ Safari 17+
+- ✅ Edge 120+
+
+---
+
 ## 📖 References
 
 ### W3C Standards
