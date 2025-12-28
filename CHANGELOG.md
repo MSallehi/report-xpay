@@ -2,11 +2,11 @@
 
 تمامی تغییرات مهم در این پروژه در این فایل مستند می‌شود.
 
-## [نسخه 1.5.1] - 2025-12-28 (Update)
+## [نسخه 1.5.1] - 2025-12-28 (Update 2)
 
-### 🐛 رفع باگ (Bug Fix)
+### 🐛 رفع باگ (Bug Fixes)
 
-#### WordPress Global Styles in Body (W3C Validation Error)
+#### 1. WordPress Global Styles in Body (W3C Validation Error)
 - **Problem Fixed**: `<style id='global-styles-inline-css'>` در `<body>` (خطای W3C)
   - فایل: `functions.php`
   - راه‌حل: جابجایی global styles از footer به head
@@ -17,18 +17,32 @@
     ```
   - تأثیر: ✅ HTML5 Valid, بدون تأثیر بر styling
 
+#### 2. Speculation Rules Invalid MIME Type (W3C Validation Error)
+- **Problem Fixed**: `type="speculationrules"` (خطای W3C)
+  - فایل: `functions.php`
+  - راه‌حل: تغییر به MIME type صحیح
+  - Implementation:
+    ```php
+    add_filter('wp_inline_script_attributes', function($attributes) {
+        if (isset($attributes['type']) && $attributes['type'] === 'speculationrules') {
+            $attributes['type'] = 'application/speculationrules+json';
+        }
+        return $attributes;
+    }, 10, 1);
+    ```
+  - تأثیر: ✅ HTML5 Valid, بدون تأثیر بر prefetching
+
 ### 📊 نتایج Validation
 
-| Metric | نسخه 1.5.1 (Before) | نسخه 1.5.1 (After) |
-|--------|---------------------|---------------------|
-| Total W3C Errors | 4 | **3** |
+| Metric | نسخه 1.5.1 (Initial) | نسخه 1.5.1 (Final) |
+|--------|----------------------|--------------------|
+| Total W3C Errors | 4 | **2** |
 | Theme Errors | 0 | **0** |
-| WordPress Core Errors | 4 | **3** |
+| WordPress Core Errors | 4 | **2** |
 
-**ارورهای باقیمانده (WordPress Core):**
-- `contain-intrinsic-size` - قابل نادیده‌گرفتن
-- `type="speculationrules"` - قابل نادیده‌گرفتن
-- `type="text/javascript"` - قابل نادیده‌گرفتن
+**ارورهای باقیمانده (WordPress Core - قابل نادیده‌گرفتن):**
+- `contain-intrinsic-size` - WordPress media optimization
+- `type="text/javascript"` - WordPress legacy syntax
 
 ---
 

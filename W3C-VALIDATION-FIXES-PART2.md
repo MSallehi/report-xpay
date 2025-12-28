@@ -61,19 +61,20 @@
 | 13 | Empty heading `<h3></h3>` | 1 | Warning | ✅ Fixed |
 | 14 | Section lacks heading | 4 | Warning | ⚠️ Acceptable |
 | 15 | `<style>` in `<body>` (WordPress) | 1 | Error | ✅ Fixed |
+| 16 | `type="speculationrules"` (WordPress) | 1 | Error | ✅ Fixed |
 
-**Total Theme Errors Fixed:** 20
+**Total Theme Errors Fixed:** 21
 
 ### WordPress Core Errors (خارج از کنترل - اکنون فیکس شد ✅)
 
 | Error | Source | Status |
 |-------|--------|--------|
 | ~~CSS `contain-intrinsic-size`~~ | ~~`wp-includes/media.php`~~ | ⚠️ WordPress Core (قابل نادیده‌گرفتن) |
-| ~~`type="speculationrules"`~~ | ~~`wp-includes/speculative-loading.php`~~ | ⚠️ WordPress Core (قابل نادیده‌گرفتن) |
+| **`type="speculationrules"`** | **`wp-includes/speculative-loading.php`** | **✅ Fixed in Theme** |
 | **`<style>` in `<body>`** | **WordPress Core** | **✅ Fixed in Theme** |
 | ~~`type="text/javascript"`~~ | ~~WordPress Core~~ | ⚠️ WordPress Core (قابل نادیده‌گرفتن) |
 
-**Update:** ارور `<style>` in `<body>` با راه‌حل theme فیکس شد!
+**Update:** ارورهای `<style>` in `<body>` و `type="speculationrules"` با راه‌حل theme فیکس شدند!
 
 ---
 
@@ -403,9 +404,9 @@
 | [views/pages/home.php](../views/pages/home.php) | 5 changes | 6 errors |
 | [views/archives/coin.php](../views/archives/coin.php) | 1 change | 1 error |
 | [templates/popup/popup-airdrop-tutorial.php](../templates/popup/popup-airdrop-tutorial.php) | 1 change | 1 warning |
-| [functions.php](../functions.php) | 1 change | 1 error (WordPress Core) |
+| [functions.php](../functions.php) | 2 changes | 2 errors (WordPress Core) |
 
-**Total:** 17 changes across 6 files
+**Total:** 18 changes across 6 files
 
 ### جزئیات تغییرات
 
@@ -451,13 +452,17 @@
 + Line 32: <h3 id="popup-tutorial-title"></h3> → <h3 id="popup-tutorial-title"><span class="placeholder">آموزش</span></h3>
 ```
 
-#### 6. functions.php (1 change)
+#### 6. functions.php (2 changes)
 
 ```diff
 + End of file: افزودن 2 action hooks برای جابجایی global-styles از body به head
 + - remove_action('wp_footer', 'wp_enqueue_global_styles', 1)
 + - add_action('wp_head', 'wp_enqueue_global_styles', 100)
 + - output buffering برای cleanup style tags در footer
++
++ End of file: افزودن filter برای فیکس speculation rules MIME type
++ - wp_inline_script_attributes filter
++ - type="speculationrules" → type="application/speculationrules+json"
 ```
 
 ---
@@ -796,17 +801,16 @@ add_action('wp_enqueue_scripts', function() {
 ┌─────────────────────┬─────────┬─────────┐
 │ Metric              │ Before  │ After   │
 ├─────────────────────┼─────────┼─────────┤
-│ Total Errors        │ 43      │ 3*      │
-│ Theme Errors        │ 20      │ 0       │
-│ WordPress Errors    │ 23      │ 3*      │
+│ Total Errors        │ 43      │ 2*      │
+│ Theme Errors        │ 21      │ 0       │
+│ WordPress Errors    │ 22      │ 2*      │
 │ Warnings            │ 7       │ 0       │
 │ HTML5 Compliance    │ ❌      │ ✅      │
 │ Accessibility Score │ 85/100  │ 98/100  │
 └─────────────────────┴─────────┴─────────┘
 
-* 3 WordPress Core errors باقیمانده (قابل نادیده‌گرفتن)
+* 2 WordPress Core errors باقیمانده (قابل نادیده‌گرفتن)
   - contain-intrinsic-size (WordPress media optimization)
-  - type="speculationrules" (WordPress 6.7+ prefetching)
   - type="text/javascript" (WordPress legacy)
 ```
 
@@ -916,12 +920,13 @@ $$('[alt]').filter(el => el.tagName === 'A')
 
 ### WordPress Core Errors Note
 
-⚠️ فقط 3 ارور باقیمانده مربوط به WordPress Core هستند:
+⚠️ فقط 2 ارور باقیمانده مربوط به WordPress Core هستند:
 - `contain-intrinsic-size` - WordPress lazy loading optimization
-- `type="speculationrules"` - WordPress 6.7+ prefetching feature  
 - `type="text/javascript"` - WordPress legacy syntax
 
-✅ ارور `<style>` in `<body>` با راه‌حل theme فیکس شد!
+✅ ارورهای زیر با راه‌حل theme فیکس شدند:
+- `<style>` in `<body>` - جابجایی به head
+- `type="speculationrules"` - فیکس MIME type
 
 این ارورهای باقیمانده:
 - ✅ قابل نادیده‌گرفتن هستند
@@ -930,7 +935,7 @@ $$('[alt]').filter(el => el.tagName === 'A')
 
 ---
 
-**✨ تمام ارورهای قابل رفع در theme فیکس شدند! (20 errors fixed)**
+**✨ تمام ارورهای قابل رفع در theme فیکس شدند! (21 errors fixed)**
 
 **Date:** December 28, 2025  
 **Author:** XPay Development Team  
