@@ -1303,6 +1303,81 @@ From line 586, column 13; to line 586, column 90
 
 ---
 
+### 21. Empty `action` Attribute on `<form>` ❌➜✅
+
+#### مشکل
+```html
+<!-- ❌ Before: Empty action attribute -->
+<form action="" class="form-box flex align-center justify-bet">
+    <input type="text" placeholder="...">
+</form>
+
+<form action="" class="flex align-center justify-bet search-form">
+    <input type="text" placeholder="...">
+</form>
+```
+
+**W3C Error:**
+```
+Error: Bad value for attribute action on element form: Must be non-empty.
+From line 487, column 21; to line 487, column 83
+<form action="" class="form-box flex align-center justify-bet">
+```
+
+**علت:** 
+- طبق استاندارد HTML5، اگر `action=""` خالی است، باید **حذف شود**
+- مقدار خالی (`action=""`) invalid است
+- وقتی action حذف شود، فرم به همان URL submit می‌شود (default behavior)
+
+#### راه‌حل
+```html
+<!-- ✅ After: Remove action attribute entirely -->
+<form class="form-box flex align-center justify-bet">
+    <input type="text" placeholder="...">
+</form>
+
+<form class="flex align-center justify-bet search-form">
+    <input type="text" placeholder="...">
+</form>
+```
+
+**توضیح:**
+- `action=""` → حذف attribute
+- Behavior: فرم به همان صفحه submit می‌شود (default)
+- Valid HTML5: ✅
+
+**فایل‌های تغییر یافته:**
+
+1. **header.php** (Line 563)
+   - Context: Mobile menu search box
+   - Before: `<form action="" class="form-box flex align-center justify-bet">`
+   - After: `<form class="form-box flex align-center justify-bet">`
+
+2. **views/pages/help.php** (Line 27)
+   - Context: Help page search form
+   - Before: `<form action="" class="flex align-center justify-bet search-form">`
+   - After: `<form class="flex align-center justify-bet search-form">`
+
+**تأثیر:**
+- ✅ HTML5 Valid: No empty action attribute
+- ✅ Functionality: Same behavior (submit to current page)
+- ✅ No breaking changes: Forms work exactly as before
+- ✅ Standards compliant: Follows HTML5 spec
+
+**HTML5 Specification:**
+According to [HTML Living Standard](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-action):
+> "If the action attribute is omitted, the form will be submitted to the document's current address."
+
+**Note:**
+این همان behavior است که با `action=""` داشتیم، ولی حالا valid است.
+
+**Browser Compatibility:**
+- ✅ All modern browsers
+- ✅ No visual changes
+- ✅ No JavaScript changes needed
+
+---
+
 ## 📖 References
 
 ### W3C Standards

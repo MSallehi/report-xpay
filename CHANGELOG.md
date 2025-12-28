@@ -2,6 +2,34 @@
 
 تمامی تغییرات مهم در این پروژه در این فایل مستند می‌شود.
 
+## [نسخه 1.5.1] - 2025-12-28 (Update 7)
+
+### 🐛 رفع باگ (Bug Fixes)
+
+#### 7. Empty action Attribute on form (W3C Validation Error)
+- **Problem Fixed**: attribute `action=""` خالی در تگ `<form>` (خطای W3C)
+  - فایل‌ها:
+    - `header.php` (Line 563) - Mobile menu search box
+    - `views/pages/help.php` (Line 27) - Help page search form
+  - راه‌حل: حذف کامل attribute `action=""`
+  - تغییرات:
+    - `<form action="" class="...">` → `<form class="...">`
+  - علت: طبق HTML5، اگر action خالی است باید حذف شود نه مقدار خالی داشته باشد
+  - تأثیر: ✅ HTML5 Valid, ✅ بدون تغییر در functionality (همان behavior)
+
+### 📊 HTML5 Standard
+
+**طبق [HTML Living Standard](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#attr-fs-action):**
+> "If the action attribute is omitted, the form will be submitted to the document's current address."
+
+این دقیقاً همان چیزی است که `action=""` انجام می‌داد، ولی حالا **valid** است.
+
+**Behavior:**
+- قبل: `action=""` → submit به current page ✅ (ولی invalid)
+- بعد: بدون action → submit به current page ✅ (valid)
+
+---
+
 ## [نسخه 1.5.1] - 2025-12-28 (Update 6)
 
 ### 🐛 رفع باگ (Bug Fixes)
