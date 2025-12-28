@@ -49,7 +49,6 @@ function end_el() {
     $output .= '</li>';
 }
 ```
-
 ### ⚠️ یادداشت مهم: CSS `contain-intrinsic-size`
 
 **W3C Validator Warning:**
