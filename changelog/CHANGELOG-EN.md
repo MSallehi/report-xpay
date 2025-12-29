@@ -8,6 +8,47 @@ All notable changes to this project will be documented in this file.
 
 ### ⚡ Performance Optimizations
 
+#### 🎯 Fixed Forced Reflow in app-vendor.js (v2.0)
+- **Issue Identified:**
+  - PageSpeed Insights still reported 107ms forced reflow
+  - `app-vendor.js` (jQuery, React) responsible for 58ms of this reflow
+  - Root cause: app-vendor loaded **before** dom-interceptor
+
+- **Root Cause:**
+  ```php
+  // Before (❌):
+  wp_enqueue_script('app-vendor', ..., array(), ...);  // no dependency
+  ```
+  - jQuery and React loaded **before** native methods were overridden
+  - dom-interceptor couldn't prevent forced reflows
+
+- **Solution Implemented:**
+  ```php
+  // After (✅):
+  $vendor_deps = array();
+  if ($enable_reflow_optimization) {
+      $vendor_deps[] = 'dom-interceptor';  // ensure load order
+  }
+  wp_enqueue_script('app-vendor', ..., $vendor_deps, ...);
+  ```
+
+- **Correct Load Order:**
+  1. reflow-optimizer.js
+  2. dom-interceptor.js (deps: reflow-optimizer)
+  3. swiper-wrapper.js (deps: dom-interceptor)
+  4. **app-vendor.js** (deps: dom-interceptor) ← Fixed!
+  5. app-coins.js (deps: app-vendor)
+
+- **Modified Files:**
+  - `app/Support/Assets.php`: Added dom-interceptor to dependencies
+  - `docs/FORCED-REFLOW.md`: Updated to version 2.0
+
+- **Expected Results:**
+  - ✅ 50-70% reduction in forced reflow time
+  - ✅ Prevent reflow in jQuery operations
+  - ✅ Improved LCP and TBT metrics
+  - ✅ Native methods overridden before usage
+
 #### 🚀 Real-Time Price Update Optimization
 - **Removed Delays:**
   - Removed `idleTimeout: 5000` and `fallbackDelay: 3000` from config
@@ -39,6 +80,10 @@ All notable changes to this project will be documented in this file.
   - ✅ No stale CDN cache usage
   - ✅ Maintains modular and clean code structure
   - ✅ No page speed degradation
+
+#### 📚 New Documentation
+- **PRICE-UPDATE-API.md**: Comprehensive price update system documentation (700+ lines)
+- **FORCED-REFLOW.md v2.0**: Updated documentation with app-vendor fix
 
 ---
 

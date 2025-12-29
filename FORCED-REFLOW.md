@@ -1,10 +1,14 @@
-# مستندات Forced Reflow Optimization
+# مستندات Forced Reflow Optimization (v2.0)
 
 <div dir="rtl">
 
 ## 📌 مقدمه
 
 **Forced Reflow** (Layout Thrashing) یکی از مهمترین مشکلات performance در وب است که زمانی رخ می‌دهد که JavaScript بعد از تغییر DOM، خصوصیات هندسی (geometric properties) را query می‌کند و مجبور به recalculation فوری layout می‌شود.
+
+**نسخه:** 2.0.0  
+**تاریخ بروزرسانی:** 29 دسامبر 2025  
+**وضعیت:** 🟢 فعال - Production Ready
 
 ### ❌ مشکل
 
@@ -36,6 +40,51 @@ for (let i = 0; i < elements.length; i++) {
 
 ---
 
+## 🆕 بروزرسانی نسخه 2.0 (29 دسامبر 2025)
+
+### مشکل شناسایی شده:
+PageSpeed Insights همچنان **forced reflow** گزارش می‌کرد حتی با وجود ReflowOptimizer و DOM Interceptor:
+
+```
+Forced reflow - Total reflow time:
+- [unattributed]: 107 ms
+- app-vendor.js: 58 ms  ⚠️ مشکل اصلی
+- swiper.js: 5 ms
+- dom-interceptor.js: 8 ms
+```
+
+### ریشه مشکل:
+**app-vendor.js** (شامل jQuery, React, و کتابخانه‌های دیگر) **قبل از** dom-interceptor لود می‌شد!
+
+```php
+// قبلی (❌ اشتباه):
+wp_enqueue_script('app-vendor', ..., array(), ...);  // بدون dependency
+wp_enqueue_script('dom-interceptor', ..., array('reflow-optimizer'), ...);
+```
+
+**نتیجه:** jQuery و React قبل از اینکه dom-interceptor native methods را override کند، لود شده و از methods غیربهینه استفاده می‌کردند.
+
+### راه‌حل:
+اضافه کردن `dom-interceptor` به dependencies لیست `app-vendor`:
+
+```php
+// جدید (✅ درست):
+$vendor_deps = array();
+if ($enable_reflow_optimization) {
+    $vendor_deps[] = 'dom-interceptor';  // ← اطمینان از load order
+}
+wp_enqueue_script('app-vendor', ..., $vendor_deps, ...);
+```
+
+**ترتیب load صحیح:**
+1. `reflow-optimizer.js` (header)
+2. `dom-interceptor.js` (header, deps: reflow-optimizer)
+3. `swiper-wrapper.js` (header, deps: dom-interceptor)
+4. **`app-vendor.js`** (header, deps: dom-interceptor) ← فیکس شده!
+5. `app-coins.js` (header, deps: app-vendor)
+
+---
+
 ## 🎯 راه‌حل پیاده‌شده: ReflowOptimizer
 
 ما یک **ReflowOptimizer Module** ساختیم که:
@@ -45,6 +94,7 @@ for (let i = 0; i < elements.length; i++) {
 3. ✅ نتایج را cache می‌کند تا از read های اضافی جلوگیری کند
 4. ✅ Promise-based API برای async operations
 5. ✅ قابل فعال/غیرفعال کردن از PageSpeed Admin
+6. 🆕 DOM Interceptor برای override کردن native methods **قبل از** vendor libraries
 
 ---
 

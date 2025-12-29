@@ -8,6 +8,47 @@
 
 ### ⚡ بهینه‌سازی عملکرد (Performance)
 
+#### 🎯 رفع Forced Reflow در app-vendor.js (v2.0)
+- **مشکل شناسایی شده:**
+  - PageSpeed Insights همچنان 107ms forced reflow گزارش می‌کرد
+  - `app-vendor.js` (jQuery, React) مسئول 58ms از این reflow بود
+  - علت: app-vendor **قبل از** dom-interceptor لود می‌شد
+
+- **ریشه مشکل:**
+  ```php
+  // قبلی (❌):
+  wp_enqueue_script('app-vendor', ..., array(), ...);  // بدون dependency
+  ```
+  - jQuery و React **قبل از** override شدن native methods لود می‌شدند
+  - dom-interceptor نمی‌توانست forced reflows را جلوگیری کند
+
+- **راه‌حل پیاده‌سازی شده:**
+  ```php
+  // جدید (✅):
+  $vendor_deps = array();
+  if ($enable_reflow_optimization) {
+      $vendor_deps[] = 'dom-interceptor';  // اطمینان از load order
+  }
+  wp_enqueue_script('app-vendor', ..., $vendor_deps, ...);
+  ```
+
+- **ترتیب load صحیح:**
+  1. reflow-optimizer.js
+  2. dom-interceptor.js (deps: reflow-optimizer)
+  3. swiper-wrapper.js (deps: dom-interceptor)
+  4. **app-vendor.js** (deps: dom-interceptor) ← فیکس شده!
+  5. app-coins.js (deps: app-vendor)
+
+- **فایل‌های تغییر یافته:**
+  - `app/Support/Assets.php`: اضافه کردن dom-interceptor به dependencies
+  - `docs/FORCED-REFLOW.md`: بروزرسانی به نسخه 2.0
+
+- **نتیجه پیش‌بینی شده:**
+  - ✅ کاهش 50-70% در forced reflow time
+  - ✅ جلوگیری از reflow در jQuery operations
+  - ✅ بهبود LCP و TBT metrics
+  - ✅ native methods قبل از استفاده override می‌شوند
+
 #### 🚀 بهینه‌سازی Real-Time بروزرسانی قیمت‌ها
 - **حذف تاخیرها:**
   - حذف `idleTimeout: 5000` و `fallbackDelay: 3000` از config
@@ -39,6 +80,10 @@
   - ✅ عدم استفاده از cache های قدیمی CDN
   - ✅ حفظ ساختار ماژولار و تمیز کد
   - ✅ عدم کاهش سرعت صفحه
+
+#### 📚 مستندات جدید
+- **PRICE-UPDATE-API.md**: مستندات جامع سیستم بروزرسانی قیمت‌ها (700+ خط)
+- **FORCED-REFLOW.md v2.0**: بروزرسانی مستندات با رفع مشکل app-vendor
 
 ---
 
