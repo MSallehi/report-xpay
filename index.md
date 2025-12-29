@@ -1,8 +1,8 @@
 # 📊 مستندات فنی قالب XPay
 # XPay WordPress Theme Documentation
 
-> **نسخه:** 5.5.10  
-> **آخرین بروزرسانی:** 29 دسامبر 2025  
+> **نسخه:** 5.6.5  
+> **آخرین بروزرسانی:** ژانویه 2025  
 > **وضعیت:** 🟢 فعال و در حال توسعه
 
 ---
@@ -98,6 +98,22 @@
   - کنترل از PageSpeed Admin
   - کاهش 65-80% reflow time (بروز شده)
   - مستندات کامل API و Usage
+
+- [**⚡ بهینه‌سازی Forced Reflow v3.1**](FORCED-REFLOW-V3.md) 🔥 جدیدترین
+  - DOM Interceptor v3.1 با Pre-warming
+  - LRU Cache با 100ms TTL
+  - batchRead() API برای Batch Operations
+  - jQuery Integration با Patch Methods
+  - Highcharts Optimization با useMemo
+  - Swiper Wrapper v3.0 با Debounced Updates
+  - کاهش ~75% در Forced Reflow Time
+  - مستندات کامل با کدهای نمونه
+
+- [**🔧 رفع مشکل ذخیره تنظیمات PageSpeed Admin**](PAGESPEED-ADMIN-FIX.md) 🆕
+  - فیکس JavaScript با helper function
+  - فیکس PHP با filter_var(FILTER_VALIDATE_BOOLEAN)
+  - درس‌های آموخته درباره jQuery AJAX و boolean
+  - راهنمای تست و Debug
 
 - [**🚀 بهینه‌سازی جامع Performance**](PERFORMANCE-OPTIMIZATION.md) 🔥 جدیدترین
   - PerformanceOptimizer Module کامل
