@@ -8,10 +8,10 @@ All notable changes to this project will be documented in this file.
 
 ### ⚡ Performance Optimizations
 
-#### 🎯 Fixed Forced Reflow in app-vendor.js and Swiper (v2.0)
+#### 🎯 Fixed Forced Reflow in app-vendor.js, Swiper, and reflow-optimizer (v3.0 - CRITICAL)
 
 **Issue 1: app-vendor.js (Update 1)**
-- PageSpeed Insights still reported 107ms forced reflow
+- PageSpeed Insights reported 107ms forced reflow
 - `app-vendor.js` (jQuery, React) responsible for 58ms of this reflow
 - Root cause: app-vendor loaded **before** dom-interceptor
 
@@ -41,24 +41,67 @@ if ($load_swiper) {
 }
 ```
 
-**Final Load Order:**
-1. reflow-optimizer.js
-2. dom-interceptor.js
-3. swiper-script.js ← Fixed! (moved from footer to header)
-4. swiper-wrapper.js ← after swiper-script
-5. app-vendor.js ← after dom-interceptor
-6. app-coins.js
+**Issue 3 (CRITICAL): reflow-optimizer was causing reflow itself! (Update 3)**
+- After Update 1 and 2, still had 61ms reflow remaining
+- **Shocking discovery:** reflow-optimizer.js itself was causing 10ms reflow!
+- Root cause: reflow-optimizer loaded **before** dom-interceptor
+- Result: reflow-optimizer used **native methods** that triggered reflows
+- A **circular problem**: the optimizer meant to prevent reflows was causing them!
+
+**Solution Update 3 (Architectural Fix):**
+
+1. **DOM Interceptor became independent (v2.0):**
+   - No longer depends on ReflowOptimizer
+   - Has its own lightweight internal batcher
+   - Can load **before everything else**
+
+```javascript
+// dom-interceptor.js v2.0
+let batchQueue = {
+    measureQueue: [],
+    mutateQueue: [],
+    measure(callback) { /* RAF batching */ },
+    mutate(callback) { /* RAF batching */ },
+    flush() { /* execute queues */ }
+};
+
+const optimizer = typeof window.ReflowOptimizer !== "undefined" 
+    ? window.ReflowOptimizer 
+    : batchQueue;
+```
+
+2. **Load Order Changed:**
+```php
+// Before (❌ WRONG):
+wp_enqueue_script('reflow-optimizer', ..., array(), ..., false);        // first
+wp_enqueue_script('dom-interceptor', ..., array('reflow-optimizer'), ..., false);  // second
+
+// After (✅ CORRECT):
+wp_enqueue_script('dom-interceptor', ..., array(), ..., false);         // first
+wp_enqueue_script('reflow-optimizer', ..., array('dom-interceptor'), ..., false);  // second
+```
+
+**Final Load Order (v3 - FINAL):**
+1. ✅ **dom-interceptor.js** (NO deps) ← CRITICAL FIX! First of all
+2. ✅ reflow-optimizer.js (deps: dom-interceptor)
+3. ✅ performance-optimizer.js (deps: reflow-optimizer)
+4. ✅ inp-optimizer.js
+5. ✅ swiper-script.js (deps: dom-interceptor) [if needed]
+6. ✅ swiper-wrapper.js (deps: swiper-script) [if needed]
+7. ✅ app-vendor.js (deps: dom-interceptor)
+8. ✅ app-coins.js (deps: app-vendor)
 
 **Modified Files:**
-- `app/Support/Assets.php`: Fixed load order for swiper-script and app-vendor
-- `assets/js/swiper-wrapper.js`: Version 2.0 - simpler and more efficient
-- `docs/FORCED-REFLOW.md`: Updated with Update 2
+- `app/Support/Assets.php`: CRITICAL change in load order - dom-interceptor now first
+- `assets/js/dom-interceptor.js`: Version 2.0 - independent with internal batcher
+- `assets/js/swiper-wrapper.js`: Version 2.0 - simpler
+- `docs/FORCED-REFLOW.md`: Updated with Update 3 - circular problem explained
 
 **Expected Results:**
-- ✅ 70-85% reduction in forced reflow time (107ms → ~15-30ms)
-- ✅ swiper.js without forced reflow
-- ✅ app-vendor.js optimized
-- ✅ All vendor libraries use DOM Interceptor
+- ✅ reflow-optimizer no longer causes reflow itself (10ms → ~0ms)
+- ✅ **85-95%** reduction in forced reflow time (61ms → **~3-8ms**)
+- ✅ All scripts use overridden native methods
+- ✅ Circular problem solved
 
 #### 🚀 Real-Time Price Update Optimization
 - **Removed Delays:**

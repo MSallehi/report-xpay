@@ -709,6 +709,171 @@ element.style.transform = 'translateX(100px)';  // No reflow!
 
 ---
 
+## 🆕 Update 3: رفع مشکل CRITICAL - reflow-optimizer خودش reflow ایجاد می‌کرد!
+
+**تاریخ:** 29 دسامبر 2025 - عصر
+
+### مشکل کشف شده
+
+بعد از فیکس های قبلی (app-vendor و swiper)، همچنان reflow داشتیم:
+
+```
+PageSpeed Insights - Forced reflow:
+Total reflow time: ~61 ms
+- reflow-optimizer.js: 10 ms  ⚠️⚠️ خود optimizer reflow ایجاد می‌کند!
+- [unattributed]: 40 ms
+- swiper.js: 5 ms + 4 ms = 9 ms
+- dom-interceptor.js: 2 ms
+```
+
+### ریشه مشکل (CRITICAL)
+
+**reflow-optimizer قبل از dom-interceptor لود می‌شد!** این یعنی:
+
+1. reflow-optimizer از **native methods** استفاده می‌کرد که هنوز override نشده بودند
+2. وقتی callbacks را در `flush()` execute می‌کرد، خودش **forced reflow** ایجاد می‌کرد!
+3. یک **circular problem** بود: optimizer که قرار بود reflow را جلوگیری کند، خودش reflow ایجاد می‌کرد!
+
+```
+قبلی (❌ WRONG - circular problem):
+1. reflow-optimizer.js   ← از native offsetWidth استفاده می‌کند → reflow!
+2. dom-interceptor.js    ← حالا override می‌کند (خیلی دیر!)
+3. swiper.js
+4. app-vendor.js
+```
+
+### راه‌حل (CRITICAL FIX)
+
+#### 1. DOM Interceptor مستقل شد (v2.0)
+
+- دیگر به ReflowOptimizer وابسته نیست
+- یک **lightweight batcher داخلی** دارد
+- می‌تواند **قبل از همه** لود شود
+
+```javascript
+// assets/js/dom-interceptor.js v2.0 - مستقل از ReflowOptimizer
+let batchQueue = {
+    measureQueue: [],
+    mutateQueue: [],
+    scheduled: false,
+    measure(callback) {
+        this.measureQueue.push(callback);
+        this.schedule();
+    },
+    mutate(callback) {
+        this.mutateQueue.push(callback);
+        this.schedule();
+    },
+    schedule() {
+        if (!this.scheduled) {
+            this.scheduled = true;
+            requestAnimationFrame(() => this.flush());
+        }
+    },
+    flush() {
+        // Execute all measures first (reads)
+        this.measureQueue.forEach(cb => cb());
+        // Then all mutations (writes)
+        this.mutateQueue.forEach(cb => cb());
+        // Clear queues
+        this.measureQueue = [];
+        this.mutateQueue = [];
+        this.scheduled = false;
+    }
+};
+
+// Use ReflowOptimizer if available, otherwise use internal batcher
+const optimizer = typeof window.ReflowOptimizer !== "undefined" 
+    ? window.ReflowOptimizer 
+    : batchQueue;
+
+// Now override native methods using the optimizer
+Object.defineProperty(Element.prototype, 'offsetWidth', {
+    get() {
+        return optimizer.measure(() => /* get actual value */);
+    }
+});
+```
+
+#### 2. Load Order تغییر کرد
+
+```php
+// app/Support/Assets.php
+
+// قبلی (❌ WRONG):
+wp_enqueue_script('reflow-optimizer', ..., array(), ..., false);        // اول
+wp_enqueue_script('dom-interceptor', ..., array('reflow-optimizer'), ..., false);  // دوم
+
+// جدید (✅ CORRECT):
+// DOM Interceptor حالا FIRST لود می‌شود - بدون هیچ dependency!
+wp_enqueue_script('dom-interceptor', ..., array(), ..., false);         // اول
+wp_enqueue_script('reflow-optimizer', ..., array('dom-interceptor'), ..., false);  // دوم
+```
+
+### ترتیب Load نهایی (v3 - FINAL)
+
+```
+1. ✅ dom-interceptor.js      (header, NO deps) ← فیکس CRITICAL! اول از همه
+2. ✅ reflow-optimizer.js     (header, deps: dom-interceptor)
+3. ✅ performance-optimizer.js (header, deps: reflow-optimizer)
+4. ✅ inp-optimizer.js         (header)
+5. ✅ swiper-script.js         (header, deps: dom-interceptor) [if needed]
+6. ✅ swiper-wrapper.js        (header, deps: swiper-script) [if needed]
+7. ✅ app-vendor.js            (header, deps: dom-interceptor)
+8. ✅ app-coins.js             (header, deps: app-vendor)
+```
+
+### نتیجه پیش‌بینی شده
+
+- ✅ reflow-optimizer دیگر خودش reflow ایجاد نمی‌کند (10ms → **~0ms**)
+- ✅ کاهش **85-95%** در total reflow time (61ms → **~3-8ms**)
+- ✅ تمام scripts از native methods override شده استفاده می‌کنند
+- ✅ circular problem حل شد
+
+### فایل‌های تغییر یافته
+
+#### app/Support/Assets.php
+```php
+// خطوط ~304-340
+if ($enable_reflow_optimization) {
+    // DOM Interceptor FIRST - مستقل و بدون dependency
+    wp_enqueue_script(
+        'dom-interceptor',
+        get_template_directory_uri() . '/assets/js/dom-interceptor.js',
+        array(), // NO dependencies
+        '2.0',
+        false
+    );
+    
+    wp_add_inline_script('dom-interceptor', 'window.xpayPageSpeedSettings = ' . json_encode($settings) . ';', 'before');
+
+    // ReflowOptimizer بعد از DOM Interceptor
+    wp_enqueue_script(
+        'reflow-optimizer',
+        get_template_directory_uri() . '/assets/js/reflow-optimizer.js',
+        array('dom-interceptor'), // depends on dom-interceptor
+        '1.0',
+        false
+    );
+}
+```
+
+#### assets/js/dom-interceptor.js (v2.0)
+- اضافه شدن internal lightweight batcher
+- حذف dependency به ReflowOptimizer
+- قابلیت load شدن به صورت مستقل
+
+### تست کردن
+
+1. Clear all caches (browser + CDN)
+2. Test در PageSpeed Insights
+3. بررسی کنید که:
+   - `reflow-optimizer.js` دیگر در لیست forced reflow نباشد
+   - Total reflow time به زیر 10ms برسد
+   - `[unattributed]` به شدت کاهش یابد
+
+---
+
 ## ✅ Checklist
 
 - [x] ReflowOptimizer module ساخته شد
@@ -719,6 +884,9 @@ element.style.transform = 'translateX(100px)';  // No reflow!
 - [x] Fallback برای زمانی که optimizer غیرفعال است
 - [x] Debug mode برای development
 - [x] Documentation کامل
+- [x] **Update 1:** app-vendor.js load order فیکس شد
+- [x] **Update 2:** swiper.js load order فیکس شد (footer → header)
+- [x] **Update 3:** reflow-optimizer self-reflow فیکس شد (dom-interceptor مستقل و اول)
 
 ---
 
