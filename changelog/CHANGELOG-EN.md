@@ -8,46 +8,57 @@ All notable changes to this project will be documented in this file.
 
 ### ⚡ Performance Optimizations
 
-#### 🎯 Fixed Forced Reflow in app-vendor.js (v2.0)
-- **Issue Identified:**
-  - PageSpeed Insights still reported 107ms forced reflow
-  - `app-vendor.js` (jQuery, React) responsible for 58ms of this reflow
-  - Root cause: app-vendor loaded **before** dom-interceptor
+#### 🎯 Fixed Forced Reflow in app-vendor.js and Swiper (v2.0)
 
-- **Root Cause:**
-  ```php
-  // Before (❌):
-  wp_enqueue_script('app-vendor', ..., array(), ...);  // no dependency
-  ```
-  - jQuery and React loaded **before** native methods were overridden
-  - dom-interceptor couldn't prevent forced reflows
+**Issue 1: app-vendor.js (Update 1)**
+- PageSpeed Insights still reported 107ms forced reflow
+- `app-vendor.js` (jQuery, React) responsible for 58ms of this reflow
+- Root cause: app-vendor loaded **before** dom-interceptor
 
-- **Solution Implemented:**
-  ```php
-  // After (✅):
-  $vendor_deps = array();
-  if ($enable_reflow_optimization) {
-      $vendor_deps[] = 'dom-interceptor';  // ensure load order
-  }
-  wp_enqueue_script('app-vendor', ..., $vendor_deps, ...);
-  ```
+**Solution Update 1:**
+```php
+$vendor_deps = array();
+if ($enable_reflow_optimization) {
+    $vendor_deps[] = 'dom-interceptor';
+}
+wp_enqueue_script('app-vendor', ..., $vendor_deps, ...);
+```
 
-- **Correct Load Order:**
-  1. reflow-optimizer.js
-  2. dom-interceptor.js (deps: reflow-optimizer)
-  3. swiper-wrapper.js (deps: dom-interceptor)
-  4. **app-vendor.js** (deps: dom-interceptor) ← Fixed!
-  5. app-coins.js (deps: app-vendor)
+**Issue 2: swiper.js (Update 2)**
+- After fixing app-vendor, still had 88ms reflow with swiper.js: 24ms
+- Root cause: `swiper-script` loaded in footer but `swiper-wrapper` in header!
+- Result: swiper-wrapper couldn't wrap Swiper as it wasn't loaded yet
 
-- **Modified Files:**
-  - `app/Support/Assets.php`: Added dom-interceptor to dependencies
-  - `docs/FORCED-REFLOW.md`: Updated to version 2.0
+**Solution Update 2:**
+```php
+// Load Swiper in header after dom-interceptor
+if ($load_swiper) {
+    wp_enqueue_script('swiper-script', ..., array('dom-interceptor'), ..., false);
+    
+    if ($enable_reflow_optimization) {
+        wp_enqueue_script('swiper-wrapper', ..., array('swiper-script'), ..., false);
+    }
+}
+```
 
-- **Expected Results:**
-  - ✅ 50-70% reduction in forced reflow time
-  - ✅ Prevent reflow in jQuery operations
-  - ✅ Improved LCP and TBT metrics
-  - ✅ Native methods overridden before usage
+**Final Load Order:**
+1. reflow-optimizer.js
+2. dom-interceptor.js
+3. swiper-script.js ← Fixed! (moved from footer to header)
+4. swiper-wrapper.js ← after swiper-script
+5. app-vendor.js ← after dom-interceptor
+6. app-coins.js
+
+**Modified Files:**
+- `app/Support/Assets.php`: Fixed load order for swiper-script and app-vendor
+- `assets/js/swiper-wrapper.js`: Version 2.0 - simpler and more efficient
+- `docs/FORCED-REFLOW.md`: Updated with Update 2
+
+**Expected Results:**
+- ✅ 70-85% reduction in forced reflow time (107ms → ~15-30ms)
+- ✅ swiper.js without forced reflow
+- ✅ app-vendor.js optimized
+- ✅ All vendor libraries use DOM Interceptor
 
 #### 🚀 Real-Time Price Update Optimization
 - **Removed Delays:**

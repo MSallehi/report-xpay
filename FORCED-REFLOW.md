@@ -83,6 +83,46 @@ wp_enqueue_script('app-vendor', ..., $vendor_deps, ...);
 4. **`app-vendor.js`** (header, deps: dom-interceptor) ← فیکس شده!
 5. `app-coins.js` (header, deps: app-vendor)
 
+### 🆕 Update 2: رفع مشکل Swiper Load Order (29 دسامبر 2025 - بعدازظهر)
+
+**مشکل جدید:**
+```
+Forced reflow - Total reflow time:
+- [unattributed]: 88 ms
+- swiper.js: 22 ms + 2 ms = 24 ms  ⚠️
+- dom-interceptor.js: 3 ms
+```
+
+**ریشه مشکل:**
+- `swiper-script` در footer لود می‌شد (`true`)
+- `swiper-wrapper` در header لود می‌شد (`false`)
+- **نتیجه:** swiper-wrapper نمی‌توانست Swiper را wrap کند چون هنوز لود نشده بود!
+
+**راه‌حل:**
+```php
+// Swiper را در header بعد از dom-interceptor لود کنیم
+if ($load_swiper) {
+    wp_enqueue_script('swiper-script', ..., array('dom-interceptor'), ..., false);
+    
+    if ($enable_reflow_optimization) {
+        wp_enqueue_script('swiper-wrapper', ..., array('swiper-script'), ..., false);
+    }
+}
+```
+
+**ترتیب load نهایی (بروز شده):**
+1. ✅ `reflow-optimizer.js` (header)
+2. ✅ `dom-interceptor.js` (header, deps: reflow-optimizer)
+3. ✅ **`swiper-script.js`** (header, deps: dom-interceptor) ← فیکس شده!
+4. ✅ **`swiper-wrapper.js`** (header, deps: swiper-script) ← فیکس شده!
+5. ✅ `app-vendor.js` (header, deps: dom-interceptor)
+6. ✅ `app-coins.js` (header, deps: app-vendor)
+
+**بهبود swiper-wrapper.js v2.0:**
+- ساده‌تر و کارآمدتر
+- فقط initialization را batch می‌کند
+- Swiper از native methods که قبلاً override شده‌اند استفاده می‌کند
+
 ---
 
 ## 🎯 راه‌حل پیاده‌شده: ReflowOptimizer
