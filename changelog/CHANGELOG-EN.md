@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [2.3.1] - 2025-12-29
+
+### ⚡ Performance Optimizations
+
+#### 🚀 Real-Time Price Update Optimization
+- **Removed Delays:**
+  - Removed `idleTimeout: 5000` and `fallbackDelay: 3000` from config
+  - Completely removed `scheduleCheck()` method and all artificial delays
+  - Instant price check on page load (0ms instead of 3000-5000ms)
+
+- **Reduced Cache TTL:**
+  - Frontend: Reduced `cacheExpirySeconds` from 60 to 5 seconds
+  - Backend: Reduced `$cache_ttl` from 15 to 5 seconds
+  - Price updates every 5 seconds instead of 60 seconds
+
+- **Added Cache-Busting:**
+  - Added timestamp parameter (`?t=${Date.now()}`) to check URLs
+  - Prevents CDN (Arvan) caching of price data
+  - Ensures always receiving latest prices
+
+- **Improved Structure:**
+  - Direct `checkSymbol()` execution in `init()` instead of `scheduleCheck()`
+  - Maintains IIFE modular structure
+  - Non-blocking async operations with catch handlers
+
+- **Modified Files:**
+  - `assets/js/symbol-updater.js`: Removed delays and reduced cache TTL
+  - `app/Controllers/ApiController.php`: Reduced cache TTL in `updateSymbolData()`
+
+- **Benefits:**
+  - ✅ Instant price updates (no 3-5 second delay)
+  - ✅ Fresh data every 5 seconds
+  - ✅ No stale CDN cache usage
+  - ✅ Maintains modular and clean code structure
+  - ✅ No page speed degradation
+
+---
+
 ## [2.3.0] - 2025-12-21
 
 ### ✨ New Features

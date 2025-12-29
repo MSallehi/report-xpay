@@ -1,8 +1,8 @@
 # 📊 مستندات فنی قالب XPay
 # XPay WordPress Theme Documentation
 
-> **نسخه:** 5.5.8  
-> **آخرین بروزرسانی:** 28 دسامبر 2025  
+> **نسخه:** 5.5.9  
+> **آخرین بروزرسانی:** 29 دسامبر 2025  
 > **وضعیت:** 🟢 فعال و در حال توسعه
 
 ---
@@ -41,6 +41,19 @@
   - مراحل migration به MVC
   - رفع مشکلات رایج
   - Best Practices
+
+### 💰 API و Data Management
+
+- [**💰 سیستم بروزرسانی قیمت‌ها (Price Update API)**](PRICE-UPDATE-API.md) 🔥 جدید
+  - Real-Time Price Updates (0ms delay)
+  - REST API Endpoint (`/wp-json/xpay/v1/update-symbol`)
+  - Intelligent Caching (5 second TTL)
+  - Cache-Busting Strategy برای CDN
+  - USDT Dependency Management
+  - JavaScript Modular Implementation
+  - معماری کامل و Flow Diagrams
+  - Configuration و Troubleshooting
+  - Benchmark و Performance Analysis
 
 ### ⚡ عملکرد و بهینه‌سازی
 
