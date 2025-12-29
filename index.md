@@ -1,7 +1,7 @@
 # 📊 مستندات فنی قالب XPay
 # XPay WordPress Theme Documentation
 
-> **نسخه:** 5.6.5  
+> **نسخه:** 5.6.6  
 > **آخرین بروزرسانی:** ژانویه 2025  
 > **وضعیت:** 🟢 فعال و در حال توسعه
 
@@ -114,6 +114,12 @@
   - فیکس PHP با filter_var(FILTER_VALIDATE_BOOLEAN)
   - درس‌های آموخته درباره jQuery AJAX و boolean
   - راهنمای تست و Debug
+
+- [**🚀 رفع Render Blocking Resources**](RENDER-BLOCKING-FIX.md) 🔥 جدیدترین
+  - Defer برای تمام اسکریپت‌ها (jQuery, Swiper, React bundles)
+  - کاهش ~90% در render-blocking time
+  - حفظ ترتیب execution با defer
+  - صرفه‌جویی ~3,830ms در LCP
 
 - [**🚀 بهینه‌سازی جامع Performance**](PERFORMANCE-OPTIMIZATION.md) 🔥 جدیدترین
   - PerformanceOptimizer Module کامل
