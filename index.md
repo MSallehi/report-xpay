@@ -238,6 +238,14 @@
   - Breadcrumb
   - Canonical URLs
 
+- [**🔷 مدیریت Schema**](SCHEMA-MANAGEMENT.md) 🔥 جدیدترین
+  - نحوه اضافه کردن Schema جدید
+  - نحوه حذف Schema
+  - تغییر Schema موجود (Breadcrumb, FAQ, VideoObject)
+  - مثال‌های کاربردی (Product, Article, HowTo)
+  - تست و اعتبارسنجی با validator.schema.org
+  - Best Practices و نکات مهم
+
 - [**🌍 GeoLocation**](GEOLOCATION.md)
   - تشخیص موقعیت جغرافیایی
   - IP-based Restrictions
