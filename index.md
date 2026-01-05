@@ -261,15 +261,23 @@
   - دستورالعمل‌های سریع
   - Troubleshooting
 
-- [**� تنظیم GitHub Secrets**](SECRETS-SETUP.md) 🆕
+- [**🔒 تنظیم GitHub Secrets**](SECRETS-SETUP.md) 🆕
   - راهنمای تنظیم FTP Staging و Production
   - Secrets مورد نیاز برای Deploy
   - تست و عیب‌یابی Deploy
   - جداسازی محیط‌های Staging و Production
 
-- [**�🖥️ Deploy روی cPanel**](CPANEL-DEPLOYMENT.md)
+- [**🖥️ Deploy روی cPanel**](CPANEL-DEPLOYMENT.md)
   - راهنمای cPanel
   - FTP Upload
+
+- [**📡 SFTP Sync Tool**](SFTP-SYNC.md) 🔥 جدیدترین
+  - دانلود خودکار فایل‌های تغییر یافته از سرور
+  - پشتیبانی از WinSCP و Posh-SSH
+  - فیلتر بر اساس تاریخ (7 روز، 30 روز، و...)
+  - نمایش لیست تغییرات قبل از دانلود
+  - همگام‌سازی با Git
+  - راهنمای کامل پیکربندی و عیب‌یابی
 
 ### 🔄 مهاجرت و Redirects
 
