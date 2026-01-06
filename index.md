@@ -55,6 +55,16 @@
   - Configuration و Troubleshooting
   - Benchmark و Performance Analysis
 
+- [**🎯 Global Price Manager**](PRICE-MANAGER.md) 🆕 جدیدترین
+  - یکسان‌سازی قیمت‌ها در تمام صفحات
+  - Real-time Sync هر 5 ثانیه
+  - Single Source of Truth
+  - Performance Optimized با Batch Updates
+  - Auto Retry و Error Handling
+  - Adapter System برای صفحات مختلف
+  - راهنمای سریع: [PRICE-MANAGER-QUICK.md](PRICE-MANAGER-QUICK.md)
+  - کاهش 60% در DOM Operations
+
 ### ⚡ عملکرد و بهینه‌سازی
 
 - [**📊 گزارش بهینه‌سازی عملکرد**](PERFORMANCE-REPORT.md) 🆕
