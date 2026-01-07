@@ -1,8 +1,8 @@
 # 📊 مستندات فنی قالب XPay
 # XPay WordPress Theme Documentation
 
-> **نسخه:** 5.6.6  
-> **آخرین بروزرسانی:** ژانویه 2025  
+> **نسخه:** 5.6.7  
+> **آخرین بروزرسانی:** ژانویه 2026  
 > **وضعیت:** 🟢 فعال و در حال توسعه
 
 ---
@@ -44,7 +44,16 @@
 
 ### 💰 API و Data Management
 
-- [**💰 سیستم بروزرسانی قیمت‌ها (Price Update API)**](PRICE-UPDATE-API.md) 🔥 جدید
+- [**� سیستم Cron و Cache قیمت‌ها**](CRON-CACHE-SYSTEM.md) 🔥 جدیدترین
+  - Batch Update System (10 batches, هر 60 ثانیه)
+  - Atomic File Write برای جلوگیری از Race Condition
+  - Server-Side Rendering برای Popular Coins
+  - Action Scheduler Configuration
+  - Template جدید `popular-coin.php`
+  - حذف وابستگی به JavaScript/AJAX
+  - مستندات کامل با کدهای نمونه
+
+- [**💰 سیستم بروزرسانی قیمت‌ها (Price Update API)**](PRICE-UPDATE-API.md)
   - Real-Time Price Updates (0ms delay)
   - REST API Endpoint (`/wp-json/xpay/v1/update-symbol`)
   - Intelligent Caching (5 second TTL)
