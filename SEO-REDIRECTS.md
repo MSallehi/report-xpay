@@ -260,6 +260,117 @@ private function shouldHaveTrailingSlash()
 
 ---
 
-**نسخه:** 1.0.0  
-**تاریخ:** 2025-11-11  
+## فیکس Pagination 404 (نسخه 5.6.8)
+
+### مشکل
+صفحات pagination بدون محتوا (مثل `/page/2`, `/page/999`) باید 404 برگردانند، اما وردپرس به‌صورت پیش‌فرض این صفحات را به‌صورت خالی نمایش می‌داد.
+
+**URLهای مشکل‌دار:**
+- `https://xpay.co/page/2` - وقتی صفحه اصلی یک صفحه هست
+- `https://xpay.co/blog/page/999` - شماره صفحه بیشتر از حد
+- `https://xpay.co/author/xpay/page/7/` - صفحه نویسنده بدون محتوا
+- `https://xpay.co/page2` - فرمت غلط pagination
+
+### راه حل
+
+دو hook جدید در `functions.php` اضافه شد:
+
+#### 1. بررسی Pagination بدون محتوا
+
+```php
+add_action('template_redirect', function () {
+    if (!is_paged()) return;
+
+    global $wp_query;
+    $paged = get_query_var('paged', 1);
+
+    // صفحه بدون پست
+    if ($paged > 1 && !$wp_query->have_posts()) {
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        return;
+    }
+
+    // شماره صفحه بیشتر از حد مجاز
+    $max_pages = $wp_query->max_num_pages;
+    if ($paged > $max_pages && $max_pages > 0) {
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        return;
+    }
+
+    // صفحه اصلی: اگر همه پست‌ها در یک صفحه جا می‌شوند
+    if (is_front_page() || is_home()) {
+        $total_posts = $wp_query->found_posts;
+        $posts_per_page = get_option('posts_per_page');
+        if ($total_posts <= $posts_per_page && $paged > 1) {
+            $wp_query->set_404();
+            status_header(404);
+            nocache_headers();
+            return;
+        }
+    }
+}, 5);
+```
+
+#### 2. بلاک کردن فرمت غلط Pagination
+
+```php
+add_action('template_redirect', function () {
+    $request_uri = trim($_SERVER['REQUEST_URI'], '/');
+
+    // /page2, /page3 (بدون اسلش)
+    if (preg_match('/^page\d+$/i', $request_uri)) {
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        return;
+    }
+
+    // /blog/page2, /coins/page3 (بدون اسلش بین page و عدد)
+    if (preg_match('#/page\d+$#i', $_SERVER['REQUEST_URI'])) {
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        return;
+    }
+}, 1);
+```
+
+### تست
+
+**قبل:**
+```
+/page/999 → 200 OK ❌ (صفحه خالی)
+/page2 → 200 OK ❌ (وردپرس این را handle نمی‌کرد)
+```
+
+**بعد:**
+```
+/page/999 → 404 Not Found ✓
+/page2 → 404 Not Found ✓
+/page/1 → 200 OK ✓ (اگر محتوا داشته باشد)
+```
+
+### موارد تحت پوشش
+
+| URL Pattern | نتیجه |
+|-------------|-------|
+| `/page/2` (بدون محتوا) | 404 |
+| `/page/999` | 404 |
+| `/blog/page/50` (بیشتر از حد) | 404 |
+| `/author/xpay/page/7/` (بدون محتوا) | 404 |
+| `/page2` | 404 |
+| `/coins/page3` | 404 |
+| `/page/1` (با محتوا) | 200 OK |
+| `/blog/page/2` (با محتوا) | 200 OK |
+
+---
+
+**نسخه:** 1.1.0  
+**تاریخ:** 2026-01-07  
 **نویسنده:** XPay Development Team
