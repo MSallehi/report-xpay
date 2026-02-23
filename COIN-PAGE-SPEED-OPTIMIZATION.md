@@ -1,6 +1,6 @@
 # 🚀 بهینه‌سازی سرعت صفحات Coin (Request-Level Cache + AJAX Loader)
 
-> **نسخه:** 1.0.0  
+> **نسخه:** 1.1.0  
 > **تاریخ:** فوریه 2026  
 > **وضعیت:** 🟢 فعال
 
@@ -8,10 +8,11 @@
 
 ## 📋 خلاصه
 
-این مستند شامل دو بهینه‌سازی اصلی برای بهبود سرعت لود صفحات coin است:
+این مستند شامل سه بهینه‌سازی اصلی برای بهبود سرعت لود صفحات coin است:
 
 1. **Request-Level Cache**: کاهش تعداد API calls از 4 به 1 در هر request
 2. **AJAX Price Loader**: لود قیمت‌ها به صورت asynchronous بعد از render صفحه
+3. **PHP-React Data Sync**: همگام‌سازی قیمت‌ها بین PHP و React
 
 ---
 
@@ -209,16 +210,82 @@ public function ajaxGetBatchPrices()
 
 ---
 
+## � راه‌حل 3: همگام‌سازی قیمت PHP و React
+
+### مشکل
+
+قبلاً PHP و React هر کدام جداگانه از API قیمت می‌گرفتند:
+- PHP در زمان T1 قیمت را می‌گیرد
+- React در زمان T2 قیمت را می‌گیرد
+
+به دلیل نوسان قیمت، این دو مقدار ممکن بود متفاوت باشند.
+
+### راه‌حل
+
+PHP داده‌های coin را به JavaScript پاس می‌دهد و React از همان داده‌ها استفاده می‌کند.
+
+#### فایل: `app/Support/Assets.php`
+
+```php
+// Pass pre-fetched data to React via global variable
+wp_localize_script(
+    'custom-coins',
+    'xpayCoinInitialData',
+    array(
+        'symbol' => $coin_symbol,
+        'coinData' => array(
+            'sellPrice' => floatval($coin_data['sellPrice'] ?? 0),
+            'buyPrice' => floatval($coin_data['buyPrice'] ?? 0),
+            'inDollarPrice' => floatval($coin_data['inDollarPrice'] ?? 0),
+            // ... more fields
+        ),
+        'timestamp' => time(),
+    )
+);
+```
+
+#### فایل: `src/components/CoinCalculator.jsx`
+
+```jsx
+// Check for pre-fetched data from PHP
+const initialCoinData = window.xpayCoinInitialData?.coinData || null;
+
+useEffect(() => {
+    const loadCoinData = async () => {
+        // Use pre-fetched data from PHP if available
+        if (initialCoinData && initialCoinData.symbol === symbol.toUpperCase()) {
+            setCoinData(initialCoinData);
+            return;
+        }
+        
+        // Fallback to API call
+        const data = await fetchCachedSymbol(symbol || "BTC");
+        setCoinData(data);
+    };
+
+    loadCoinData();
+}, [symbol, initialCoinData]);
+```
+
+### نتیجه
+
+- ✅ قیمت‌ها در همه جای صفحه یکسان هستند
+- ✅ یک API call کمتر (React از داده‌های PHP استفاده می‌کند)
+- ✅ تجربه کاربری بهتر
+
+---
+
 ## 📁 فایل‌های تغییر یافته
 
 | فایل | تغییر |
 |------|--------|
 | `app/Support/helpers.php` | اضافه شدن request-level cache به `get_current_coin()` |
 | `app/Controllers/ShortcodeController.php` | بهبود `getUSDTData()` + endpoint جدید `ajaxGetBatchPrices` |
-| `app/Support/Assets.php` | enqueue کردن `coin-price-loader.js` |
+| `app/Support/Assets.php` | enqueue کردن `coin-price-loader.js` + پاس دادن `xpayCoinInitialData` |
 | `assets/js/coin-price-loader.js` | **فایل جدید** - AJAX module |
 | `views/shortcodes/coin-live-data.php` | اضافه شدن data attributes و skeleton CSS |
 | `views/shortcodes/coin-change-data.php` | اضافه شدن data attributes |
+| `src/components/CoinCalculator.jsx` | استفاده از داده‌های pre-fetched PHP |
 
 ---
 

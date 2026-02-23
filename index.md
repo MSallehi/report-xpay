@@ -68,8 +68,7 @@
 
 - [**� بهینه‌سازی سرعت صفحات Coin**](COIN-PAGE-SPEED-OPTIMIZATION.md) 🔥 جدیدترین
   - Request-Level Cache (کاهش 75% API calls)
-  - AJAX Price Loader (لود async قیمت‌ها)
-  - Batch API Endpoint
+  - AJAX Price Loader (لود async قیمت‌ها)  - PHP-React Data Sync (همگام‌سازی قیمت‌ها)  - Batch API Endpoint
   - Skeleton Loading UX
   - کاهش TTFB از 16s به ~2.5s
 
